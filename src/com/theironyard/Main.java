@@ -106,7 +106,7 @@ public class Main {
 //                })
 //        );
         Spark.get(
-                "/get-my-events",
+                "/get-attending",
                 ((request, response) -> {
                     User user = getUserFromSession(request.session(), conn);
                     ArrayList<Event> events = selectMyEvents(conn, user);
@@ -115,7 +115,7 @@ public class Main {
                 })
         );
         Spark.post(
-                "/add-my-event",
+                "/add-attending",
                 ((request, response) -> {
                     User user = getUserFromSession(request.session(), conn);
                     String category = request.queryParams("category");
@@ -128,7 +128,7 @@ public class Main {
                 })
         );
         Spark.post(
-                "/delete-my-event",
+                "/delete-attending",
                 ((request, response) -> {
                     int index = Integer.valueOf(request.queryParams("id"));//grabs from a hidden type input the id to be deleted
                     deleteMyEvent(conn, index);
@@ -145,7 +145,7 @@ public class Main {
         Statement stmt = conn.createStatement();
         stmt.execute("CREATE TABLE IF NOT EXISTS users (id IDENTITY, user_name VARCHAR, password VARCHAR)");
         stmt.execute("CREATE TABLE IF NOT EXISTS events (id IDENTITY, user_name VARCHAR, category VARCHAR, date VARCHAR, location VARCHAR, title VARCHAR)");
-        stmt.execute("CREATE TABLE IF NOT EXISTS myEvents (id IDENTITY, attendee VARCHAR, user_name VARCHAR, category VARCHAR, date VARCHAR, location VARCHAR, title VARCHAR)");
+        stmt.execute("CREATE TABLE IF NOT EXISTS myEvents (id IDENTITY, attendee VARCHAR, category VARCHAR, date VARCHAR, location VARCHAR, title VARCHAR)");
     }
     //selectEvents
     public static void insertUser(Connection conn, String name, String password) throws SQLException {
@@ -275,7 +275,7 @@ public class Main {
             String location = results.getString("location");
             String title = results.getString("title");
             String attendee = results.getString("attendee");
-            Event event = new Event(id, userName, category, date, location, title, attendee);
+            Event event = new Event(id, userName, category, date, location, title);
             events.add(event);
         }
         return events;
