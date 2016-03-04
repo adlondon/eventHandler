@@ -46,12 +46,13 @@ public class Main {
                     User user = selectUser(conn, name);
                     if (user == null) {//checks if the user already exists in the database/adds user to database if not
                         insertUser(conn, name, password);
+                        user = selectUser(conn, name);
                     }
-                    user = selectUser(conn, name);//grabs user data from database to check password entry
-                    Session session = request.session();
-                    session.attribute("userName", name);
+                    //grabs user data from database to check password entry
 
-                    if (user.password.equals(password)){
+                    if (user.password.equals(password)) {
+                        Session session = request.session();
+                        session.attribute("userName", name);
                         return "";
                     }
                     else {
@@ -83,7 +84,6 @@ public class Main {
                         event.setTitle(title);
                     }
                     updateEvent(conn, event);//takes local object and rewrites in database memory(only those fields that recieved input are changed)
-                    response.redirect("/");
                     return "";
                 })
         );
@@ -92,7 +92,46 @@ public class Main {
                 ((request, response) -> {
                     int index = Integer.valueOf(request.queryParams("id"));//grabs from a hidden type input the id to be deleted
                     deleteEvent(conn, index);
-                    response.redirect("/");
+                    return "";
+                })
+        );
+
+//        for paging maybe later
+//        Spark.get(
+//                "/get-events",
+//                ((request, response) -> {
+//                    ArrayList<Event> events = selectEvents(conn, offset);
+//                    JsonSerializer serializer = new JsonSerializer();
+//                    return serializer.serialize(events);
+//                })
+//        );
+        Spark.get(
+                "/get-my-events",
+                ((request, response) -> {
+                    User user = getUserFromSession(request.session(), conn);
+                    ArrayList<Event> events = selectMyEvents(conn, user);
+                    JsonSerializer serializer = new JsonSerializer();
+                    return serializer.serialize(events);
+                })
+        );
+        Spark.post(
+                "/add-my-event",
+                ((request, response) -> {
+                    User user = getUserFromSession(request.session(), conn);
+                    String category = request.queryParams("category");
+                    LocalDate date = LocalDate.parse(request.queryParams("date"));
+                    String location = request.queryParams("location");
+                    String title = request.queryParams("title");
+                    Event event = new Event(1, user.userName, category, date, location, title);
+                    insertEvent(conn, event, user);
+                    return "";
+                })
+        );
+        Spark.post(
+                "/delete-my-event",
+                ((request, response) -> {
+                    int index = Integer.valueOf(request.queryParams("id"));//grabs from a hidden type input the id to be deleted
+                    deleteMyEvent(conn, index);
                     return "";
                 })
         );
@@ -137,7 +176,7 @@ public class Main {
     }
 
     public static Event selectEvent(Connection conn, int id) throws SQLException {
-        PreparedStatement stmt = conn.prepareStatement("SELECT * FROM events INNER JOIN users ON events.user_name = users.user_name WHERE events.id = ?");
+        PreparedStatement stmt = conn.prepareStatement("SELECT * FROM events WHERE events.id = ?");
         stmt.setInt(1, id);
         ResultSet results = stmt.executeQuery();
             if (results.next()) {
@@ -197,23 +236,23 @@ public class Main {
         }
         return events;
     }
-    public static ArrayList<Event> selectEvents(Connection conn, int offset) throws SQLException {
-        ArrayList<Event> events = new ArrayList<>();
-        PreparedStatement stmt = conn.prepareStatement("SELECT * FROM events LIMIT 10 OFFSET ?");
-        stmt.setInt(1, offset);
-        ResultSet results = stmt.executeQuery();
-        while (results.next()) {
-            int id = results.getInt("id");
-            String userName = results.getString("user_name");
-            String category = results.getString("category");
-            LocalDate date = LocalDate.parse(results.getString("date"));
-            String location = results.getString("location");
-            String title = results.getString("title");
-            Event event = new Event(id, userName, category, date, location, title);
-            events.add(event);
-        }
-        return events;
-    }
+//    public static ArrayList<Event> selectEvents(Connection conn, int offset) throws SQLException {
+//        ArrayList<Event> events = new ArrayList<>();
+//        PreparedStatement stmt = conn.prepareStatement("SELECT * FROM events LIMIT 10 OFFSET ?");
+//        stmt.setInt(1, offset);
+//        ResultSet results = stmt.executeQuery();
+//        while (results.next()) {
+//            int id = results.getInt("id");
+//            String userName = results.getString("user_name");
+//            String category = results.getString("category");
+//            LocalDate date = LocalDate.parse(results.getString("date"));
+//            String location = results.getString("location");
+//            String title = results.getString("title");
+//            Event event = new Event(id, userName, category, date, location, title);
+//            events.add(event);
+//        }
+//        return events;
+//    }
     public static void insertMyEvent(Connection conn, Event event, User user) throws SQLException {
         PreparedStatement stmt = conn.prepareStatement("INSERT INTO myEvents VALUES(NULL, ?, ?, ?, ?, ?)");
         stmt.setString(1, user.userName);
@@ -225,7 +264,7 @@ public class Main {
     }
     public static ArrayList<Event> selectMyEvents(Connection conn, User user) throws SQLException {
         ArrayList<Event> events = new ArrayList<>();
-        PreparedStatement stmt = conn.prepareStatement("SELECT * FROM events INNER JOIN users ON events.user_name = user.user_name WHERE events.user_name = ?");
+        PreparedStatement stmt = conn.prepareStatement("SELECT * FROM myEvents WHERE attendee = ?");
         stmt.setString(1, user.userName);
         ResultSet results = stmt.executeQuery();
         while (results.next()) {
@@ -238,9 +277,8 @@ public class Main {
             String attendee = results.getString("attendee");
             Event event = new Event(id, userName, category, date, location, title, attendee);
             events.add(event);
-            return events;
         }
-        return null;
+        return events;
     }
     static void deleteMyEvent(Connection conn, int id) throws SQLException {
         PreparedStatement stmt = conn.prepareStatement("DELETE FROM myEvents WHERE id = ?");
