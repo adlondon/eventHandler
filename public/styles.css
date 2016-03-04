@@ -1,0 +1,24 @@
+.inactive {
+  display: none; }
+
+.loginForm {
+  margin: 0 auto;
+  width: 40%;
+  height: 400px;
+  background-color: lightgray;
+  visibility: center; }
+  .loginForm .tryAgain {
+    text-align: center;
+    color: red; }
+
+ul {
+  display: flex;
+  list-style: none; }
+  ul li {
+    padding: 2%; }
+
+.active {
+  display: block; }
+
+section {
+  display: none; }
