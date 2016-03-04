@@ -35,17 +35,18 @@ var page = {
 
   addLogin: function () {
     $.ajax ({
-      url:  "/login"
+
+      url: "/login",
       method: "POST",
       success: function (successString) {
         console.log("SUCCESS OF LOGIN", successString);
-        if (successString === "login success") {
+         if (successString === "login success") {
           $('.login').addClass("inactive");
           $('.mainContainer').removeClass("inactive");
-        }
-        else {
-          $('.loginForm').prepend('<div class="tryAgain">That username already exists. Please try again.</div>')
-        }
+         }
+         else {
+           $('.loginForm').prepend('<div class="tryAgain">That username already exists. Please try again.</div>')
+         }
       }
     });
   },
