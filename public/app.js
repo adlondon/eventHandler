@@ -22,6 +22,7 @@ var page = {
       username = $('input[name ="username"]').val();
       localStorage.setItem('username', username);
       var loginInfo = page.getLoginInfo();
+
       page.addLogin(loginInfo);
     });
 
@@ -39,6 +40,7 @@ var page = {
   },
 
   addLogin: function (data) {
+  console.log('this is data', data);
     $.ajax ({
       method: "POST",
       url: page.url.getLogin,
@@ -71,8 +73,8 @@ var page = {
   },
 
   getLoginInfo: function () {
-    var userName = $('input [name="userName"]').val();
-    var password = $('input [name="password"]').val();
+    var userName = $('input[name="userName"]').val();
+    var password = $('input[name="password"]').val();
     return {
       userName: userName,
       password: password

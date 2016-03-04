@@ -43,7 +43,7 @@ public class Main {
                 "/login",//accepts input form home page and creates a user which is stored in the user table
                 ((request, response) -> {
                     String name = request.queryParams("userName");
-                    String password = request.queryParams("userPass");
+                    String password = request.queryParams("password");
                     User user = selectUser(conn, name);
                     if (user == null) {//checks if the user already exists in the database/adds user to database if not
                         insertUser(conn, name, password);
