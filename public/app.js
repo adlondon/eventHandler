@@ -20,9 +20,8 @@ var page = {
     $('.loginForm').on("submit", function (event) {
       event.preventDefault();
       username = $('input[name ="userName"]').val();
-      localStorage.setItem('userName', username);
+      // localStorage.setItem('userName', username);
       var loginInfo = page.getLoginInfo();
-
       page.addLogin(loginInfo);
     });
 
@@ -44,12 +43,12 @@ var page = {
     $.ajax ({
       method: "POST",
       url: page.url.getLogin,
-      data: data,
-      success: function (createdLogin) {
-        console.log("SUCCESS OF LOGIN", createdLogin);
-         if (createdLogin === "login success") {
-          $('.login').addClass("inactive");
-          $('.mainContainer').removeClass("inactive");
+      success: function (username) {
+        console.log("SUCCESS OF LOGIN", username);
+        localStorage.setItem('userName', username)
+         if (username !== "login fail") {
+           $('.login').addClass("inactive");
+           $('.mainContainer').removeClass("inactive");
          }
          else {
            $('.loginForm').prepend('<div class="tryAgain">That username already exists. Please try again.</div>')
