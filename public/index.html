@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.css">
+    <link rel="stylesheet" href="../bower_components/font-awesome/css/font-awesome.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/3.0.3/normalize.css">
     <link rel="stylesheet" href="styles.css">
 
@@ -11,10 +11,10 @@
   </head>
   <body>
     <div class="login">
-      <form>
-        <input type="text" name="username" placeholder="username">
+      <form class="loginForm">
+        <input type="text" name="userName" placeholder="username">
         <input type="text" name="password" placeholder="password">
-        <input type="submit" value="submit" >
+        <input type="submit" name ="loginSubmit" value="submit">
       </form>
     </div>
 
@@ -24,10 +24,10 @@
     <header>
       <nav>
         <ul>
-          <li rel="userProfile">profile</li>
-          <li rel="createEvent">create</li>
-          <li rel="searchContainer">search</li>
-          <li rel="eventsAttending">events attending</li>
+          <li class="navli" rel="userProfile">profile</li>
+          <li class="navli" rel="createEvent">create</li>
+          <li class="navli" rel="searchContainer">search</li>
+          <li class="navli" rel="eventsAttending">events attending</li>
         </ul>
       </nav>
       <input type="submit" name="logout" value="LogOut">
@@ -35,18 +35,29 @@
 
 
 
-    <div class="userProfile"></div>
-    <div class="createEvent"></div>
-    <div class="searchContainer active"></div>
-    <div class="eventsAttending"></div>
+    <section class="userProfile">PROFILE</section>
+    <section class="createEvent">
+      <form class="createForm">
+        <input placeholder="Title" type="text" name="title" value="">
+        <input placeholder="Category" type="text" name="category" value="">
+        <input placeholder="Date" type="text" name="date" value="">
+        <input placeholder="Location" type="text" name="location" value="">
+        <input type="submit" value="Submit">
+
+      </form>
+
+
+    </section>
+    <section class="searchContainer active">SEARCH</section>
+    <section class="eventsAttending">ATTENDING</section>
     </div>
 
 
 
 
-    <script src="bower_components/jquery/dist/jquery.js" charset="utf-8"></script>
-    <script src="bower_components/moment/moment.js" charset="utf-8"></script>
-    <script src="bower_components/underscore/underscore.js" charset="utf-8"></script>
+    <script src="../bower_components/jquery/dist/jquery.js" charset="utf-8"></script>
+    <script src="../bower_components/moment/moment.js" charset="utf-8"></script>
+    <script src="../bower_components/underscore/underscore.js" charset="utf-8"></script>
     <script src="templates.js" charset="utf-8"></script>
     <script src="app.js" charset="utf-8"></script>
   </body>
