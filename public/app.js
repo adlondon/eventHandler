@@ -3,6 +3,10 @@ $(document).ready(function () {
 })
 var username = "";
 var page = {
+  url: {
+    getLogin: "/login"
+  },
+
   init: function () {
     page.styling();
     page.events();
@@ -17,30 +21,31 @@ var page = {
       event.preventDefault();
       username = $('input[name ="username"]').val();
       localStorage.setItem('username', username);
-      page.addLogin();
+      var loginInfo = page.getLoginInfo();
+      page.addLogin(loginInfo);
     });
 
-    $('body').on("click", ".navli", function(event){
+    $('body').on("click", ".navli", function(event) {
         event.preventDefault();
         var selectedPage = '.' + $(this).attr('rel');
         $(selectedPage).siblings('section').removeClass('active');
         $(selectedPage).addClass('active');
     });
 
-    $('body').on("click", ".createSubmit" function (event) {
+    $('body').on("click", ".createSubmit", function (event) {
       event.preventDefault();
       addEvent();
-    } )
+    });
   },
 
-  addLogin: function () {
+  addLogin: function (data) {
     $.ajax ({
-
-      url: "/login",
       method: "POST",
-      success: function (successString) {
-        console.log("SUCCESS OF LOGIN", successString);
-         if (successString === "login success") {
+      url: page.url.getLogin,
+      data: data,
+      success: function (createdLogin) {
+        console.log("SUCCESS OF LOGIN", createdLogin);
+         if (createdLogin === "login success") {
           $('.login').addClass("inactive");
           $('.mainContainer').removeClass("inactive");
          }
@@ -64,6 +69,15 @@ var page = {
       }
     })
   },
+
+  getLoginInfo: function () {
+    var userName = $('input [name="userName"]').val();
+    var password = $('input [name="password"]').val();
+    return {
+      userName: userName,
+      password: password
+    };
+  }
 
 
 
