@@ -1,10 +1,92 @@
 package com.theironyard;
 
+import org.junit.Test;
+
+import java.math.BigDecimal;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.time.LocalDate;
+import java.util.ArrayList;
+
 import static org.junit.Assert.*;
 
 /**
- * Created by alexanderhughes on 3/3/16.
+ * Created by alexanderhughes on 3/4/16.
  */
 public class MainTest {
+    public Connection startConnection() throws SQLException {
+        Connection conn = DriverManager.getConnection("jdbc:h2:./test");
+        Main.createTables(conn);
+        return conn;
+    }
 
+    void endConnection(Connection conn) throws SQLException {
+        Statement stmt = conn.createStatement();
+        stmt.execute("DROP TABLE users");
+        stmt.execute("DROP TABLE events");
+        stmt.execute("DROP TABLE myEvents");
+        conn.close();
+    }
+
+    @Test
+    public void testUser() throws SQLException {
+        Connection conn = startConnection();
+        Main.insertUser(conn, "Alice", "");
+        User user = Main.selectUser(conn, "Alice");
+        endConnection(conn);
+        assertTrue(user != null);
+    }
+    @Test
+    public void testEvent() throws SQLException {
+        Connection conn = startConnection();
+        Main.insertUser(conn, "Alice", "");
+        User user = Main.selectUser(conn, "Alice");
+        LocalDate date = LocalDate.now();
+        date.now();
+        Main.insertEvent(conn, new Event(1, user.userName, "doople", date, "dooplia", "doopleparty"), user);
+        Event event = Main.selectEvent(conn, 1);
+        assertTrue(event != null);
+        endConnection(conn);
+    }
+    @Test
+    public void testDetete() throws SQLException {
+        Connection conn = startConnection();
+        Main.insertUser(conn, "Alice", "");
+        User user = Main.selectUser(conn, "Alice");
+        LocalDate date = LocalDate.now();
+        Main.insertEvent(conn, new Event(1, user.userName, "doople", date, "dooplia", "doopleparty"), user);
+        Main.deleteEvent(conn, 1);
+        Event event = Main.selectEvent(conn, 1);
+        endConnection(conn);
+        assertTrue(event == null);
+    }
+    @Test
+    public void testUpdate() throws SQLException {
+        Connection conn = startConnection();
+        Main.insertUser(conn, "Alice", "");
+        User user = Main.selectUser(conn, "Alice");
+        LocalDate date = LocalDate.now();
+        Main.insertEvent(conn, new Event(1, user.userName, "doople", date, "dooplia", "doopleparty"), user);
+        Event event = Main.selectEvent(conn, 1);
+        event.setLocation("dooplia 2");
+        Main.updateEvent(conn, event);
+        endConnection(conn);
+        assertTrue(event.location.equals("dooplia 2"));
+    }
+    @Test
+    public void testSelectEvents() throws SQLException {
+        Connection conn = startConnection();
+        Main.insertUser(conn, "Alice", "");
+        User user = Main.selectUser(conn, "Alice");
+        LocalDate date = LocalDate.now();
+        Main.insertEvent(conn, new Event(1, user.userName, "doople", date, "dooplia", "doopleparty"), user);
+        Main.insertEvent(conn, new Event(1, user.userName, "doople", date, "dooplia", "doopleparty"), user);
+        Main.insertEvent(conn, new Event(1, user.userName, "doople", date, "dooplia", "doopleparty"), user);
+        Main.insertEvent(conn, new Event(1, user.userName, "doople", date, "dooplia", "doopleparty"), user);
+        ArrayList<Event> events = Main.selectAllEvents(conn);
+        endConnection(conn);
+        assertTrue(events.size() == 4);
+    }
 }

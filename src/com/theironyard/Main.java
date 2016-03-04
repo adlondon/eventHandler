@@ -130,7 +130,7 @@ public class Main {
                     String location = request.queryParams("location");
                     String title = request.queryParams("title");
                     Event event = new Event(1, user.userName, category, date, location, title);
-                    insertEvent(conn, event, user);
+                    insertMyEvent(conn, event, user);
                     return "";
                 })
         );
@@ -162,7 +162,7 @@ public class Main {
         stmt.execute();
     }
     public static User selectUser(Connection conn, String name) throws SQLException {
-        PreparedStatement stmt = conn.prepareStatement("SELECT * FROM users WHERE name = ?");
+        PreparedStatement stmt = conn.prepareStatement("SELECT * FROM users WHERE user_name = ?");
         stmt.setString(1, name);
         ResultSet results = stmt.executeQuery();
         if (results.next()) {
@@ -203,7 +203,7 @@ public class Main {
         stmt.execute();
     }
     static void updateEvent(Connection conn, Event event) throws SQLException {
-        PreparedStatement stmt = conn.prepareStatement("UPDATE events SET category = ? date = ? location = ? title = ? WHERE id = ?");
+        PreparedStatement stmt = conn.prepareStatement("UPDATE events SET category = ?, date = ?, location = ?, title = ? WHERE id = ?");
         stmt.setString(1, event.category);
         stmt.setString(2, event.date.toString());
         stmt.setString(3, event.location);
@@ -211,22 +211,23 @@ public class Main {
         stmt.setInt(5, event.id);
         stmt.execute();
     }
-    public static ArrayList<Event> selectUserEvents(Connection conn, String userName) throws SQLException {
-        ArrayList<Event> events = new ArrayList<>();
-        PreparedStatement stmt = conn.prepareStatement("SELECT * FROM events WHERE user_name = ?");
-        stmt.setString(1, userName);
-        ResultSet results = stmt.executeQuery();
-        while (results.next()) {
-            int id = results.getInt("id");
-            String category = results.getString("category");
-            LocalDate date = LocalDate.parse(results.getString("date"));
-            String location = results.getString("location");
-            String title = results.getString("title");
-            Event event = new Event(id, userName, category, date, location, title);
-            events.add(event);
-        }
-        return events;
-    }
+    //will filter user events out on client side
+//    public static ArrayList<Event> selectUserEvents(Connection conn, String userName) throws SQLException {
+//        ArrayList<Event> events = new ArrayList<>();
+//        PreparedStatement stmt = conn.prepareStatement("SELECT * FROM events WHERE user_name = ?");
+//        stmt.setString(1, userName);
+//        ResultSet results = stmt.executeQuery();
+//        while (results.next()) {
+//            int id = results.getInt("id");
+//            String category = results.getString("category");
+//            LocalDate date = LocalDate.parse(results.getString("date"));
+//            String location = results.getString("location");
+//            String title = results.getString("title");
+//            Event event = new Event(id, userName, category, date, location, title);
+//            events.add(event);
+//        }
+//        return events;
+//    }
     public static ArrayList<Event> selectAllEvents(Connection conn) throws SQLException {
         ArrayList<Event> events = new ArrayList<>();
         Statement stmt = conn.createStatement();
