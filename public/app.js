@@ -38,11 +38,12 @@ var page = {
     });
   },
 
-  addLogin: function (data) {
-  console.log('this is data', data);
+  addLogin: function (dataArr) {
+  console.log('this is data', dataArr);
     $.ajax ({
       method: "POST",
       url: page.url.getLogin,
+      data: dataArr,
       success: function (username) {
         console.log("SUCCESS OF LOGIN", username);
         localStorage.setItem('userName', username)
@@ -50,7 +51,6 @@ var page = {
          $('.loginForm').prepend('<div class="tryAgain">That username already exists. Please try again.</div>')
          }
          else {
-
            $('.login').addClass("inactive");
            $('.mainContainer').removeClass("inactive");
          }
