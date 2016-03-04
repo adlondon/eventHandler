@@ -51,7 +51,7 @@ public class MainTest {
         endConnection(conn);
     }
     @Test
-    public void testDetete() throws SQLException {
+    public void testDelete() throws SQLException {
         Connection conn = startConnection();
         Main.insertUser(conn, "Alice", "");
         User user = Main.selectUser(conn, "Alice");
@@ -88,5 +88,29 @@ public class MainTest {
         ArrayList<Event> events = Main.selectAllEvents(conn);
         endConnection(conn);
         assertTrue(events.size() == 4);
+    }
+    @Test
+    public void testMyEvent() throws SQLException {
+        Connection conn = startConnection();
+        Main.insertUser(conn, "Alice", "");
+        User user = Main.selectUser(conn, "Alice");
+        LocalDate date = LocalDate.now();
+        date.now();
+        Main.insertEvent(conn, new Event(1, user.userName, "doople", date, "dooplia", "doopleparty"), user);
+        Event event = Main.selectEvent(conn, 1);
+        assertTrue(event != null);
+        endConnection(conn);
+    }
+    @Test
+    public void testMyDelete() throws SQLException {
+        Connection conn = startConnection();
+        Main.insertUser(conn, "Alice", "");
+        User user = Main.selectUser(conn, "Alice");
+        LocalDate date = LocalDate.now();
+        Main.insertEvent(conn, new Event(1, user.userName, "doople", date, "dooplia", "doopleparty"), user);
+        Main.deleteEvent(conn, 1);
+        Event event = Main.selectEvent(conn, 1);
+        endConnection(conn);
+        assertTrue(event == null);
     }
 }
