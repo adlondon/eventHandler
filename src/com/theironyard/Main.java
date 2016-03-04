@@ -53,12 +53,19 @@ public class Main {
                     if (user.password.equals(password)) {
                         Session session = request.session();
                         session.attribute("userName", name);
-                        return "";
+                        return "login success";
                     }
                     else {
-                        Spark.halt("403");
-                        return "";
+                        return "login fail";
                     }
+                })
+        );
+        Spark.post(
+                "/logout",
+                ((request, response) -> {
+                    Session session = request.session();
+                    session.invalidate();
+                    return "logged out";
                 })
         );
         Spark.post(
@@ -106,7 +113,7 @@ public class Main {
 //                })
 //        );
         Spark.get(
-                "/get-my-events",
+                "/get-attending",
                 ((request, response) -> {
                     User user = getUserFromSession(request.session(), conn);
                     ArrayList<Event> events = selectMyEvents(conn, user);
@@ -115,7 +122,7 @@ public class Main {
                 })
         );
         Spark.post(
-                "/add-my-event",
+                "/add-attending",
                 ((request, response) -> {
                     User user = getUserFromSession(request.session(), conn);
                     String category = request.queryParams("category");
@@ -123,12 +130,12 @@ public class Main {
                     String location = request.queryParams("location");
                     String title = request.queryParams("title");
                     Event event = new Event(1, user.userName, category, date, location, title);
-                    insertEvent(conn, event, user);
+                    insertMyEvent(conn, event, user);
                     return "";
                 })
         );
         Spark.post(
-                "/delete-my-event",
+                "/delete-attending",
                 ((request, response) -> {
                     int index = Integer.valueOf(request.queryParams("id"));//grabs from a hidden type input the id to be deleted
                     deleteMyEvent(conn, index);
@@ -145,7 +152,7 @@ public class Main {
         Statement stmt = conn.createStatement();
         stmt.execute("CREATE TABLE IF NOT EXISTS users (id IDENTITY, user_name VARCHAR, password VARCHAR)");
         stmt.execute("CREATE TABLE IF NOT EXISTS events (id IDENTITY, user_name VARCHAR, category VARCHAR, date VARCHAR, location VARCHAR, title VARCHAR)");
-        stmt.execute("CREATE TABLE IF NOT EXISTS myEvents (id IDENTITY, attendee VARCHAR, user_name VARCHAR, category VARCHAR, date VARCHAR, location VARCHAR, title VARCHAR)");
+        stmt.execute("CREATE TABLE IF NOT EXISTS myEvents (id IDENTITY, attendee VARCHAR, category VARCHAR, date VARCHAR, location VARCHAR, title VARCHAR)");
     }
     //selectEvents
     public static void insertUser(Connection conn, String name, String password) throws SQLException {
@@ -155,7 +162,7 @@ public class Main {
         stmt.execute();
     }
     public static User selectUser(Connection conn, String name) throws SQLException {
-        PreparedStatement stmt = conn.prepareStatement("SELECT * FROM users WHERE name = ?");
+        PreparedStatement stmt = conn.prepareStatement("SELECT * FROM users WHERE user_name = ?");
         stmt.setString(1, name);
         ResultSet results = stmt.executeQuery();
         if (results.next()) {
@@ -180,7 +187,7 @@ public class Main {
         stmt.setInt(1, id);
         ResultSet results = stmt.executeQuery();
             if (results.next()) {
-                String userName =results.getString("events.user_name");
+                String userName =results.getString("user_name");
                 String category = results.getString("category");
                 LocalDate date = LocalDate.parse(results.getString("date"));
                 String location = results.getString("location");
@@ -196,7 +203,7 @@ public class Main {
         stmt.execute();
     }
     static void updateEvent(Connection conn, Event event) throws SQLException {
-        PreparedStatement stmt = conn.prepareStatement("UPDATE events SET category = ? date = ? location = ? title = ? WHERE id = ?");
+        PreparedStatement stmt = conn.prepareStatement("UPDATE events SET category = ?, date = ?, location = ?, title = ? WHERE id = ?");
         stmt.setString(1, event.category);
         stmt.setString(2, event.date.toString());
         stmt.setString(3, event.location);
@@ -204,22 +211,23 @@ public class Main {
         stmt.setInt(5, event.id);
         stmt.execute();
     }
-    public static ArrayList<Event> selectUserEvents(Connection conn, String userName) throws SQLException {
-        ArrayList<Event> events = new ArrayList<>();
-        PreparedStatement stmt = conn.prepareStatement("SELECT * FROM events WHERE user_name = ?");
-        stmt.setString(1, userName);
-        ResultSet results = stmt.executeQuery();
-        while (results.next()) {
-            int id = results.getInt("id");
-            String category = results.getString("category");
-            LocalDate date = LocalDate.parse(results.getString("date"));
-            String location = results.getString("location");
-            String title = results.getString("title");
-            Event event = new Event(id, userName, category, date, location, title);
-            events.add(event);
-        }
-        return events;
-    }
+    //will filter user events out on client side
+//    public static ArrayList<Event> selectUserEvents(Connection conn, String userName) throws SQLException {
+//        ArrayList<Event> events = new ArrayList<>();
+//        PreparedStatement stmt = conn.prepareStatement("SELECT * FROM events WHERE user_name = ?");
+//        stmt.setString(1, userName);
+//        ResultSet results = stmt.executeQuery();
+//        while (results.next()) {
+//            int id = results.getInt("id");
+//            String category = results.getString("category");
+//            LocalDate date = LocalDate.parse(results.getString("date"));
+//            String location = results.getString("location");
+//            String title = results.getString("title");
+//            Event event = new Event(id, userName, category, date, location, title);
+//            events.add(event);
+//        }
+//        return events;
+//    }
     public static ArrayList<Event> selectAllEvents(Connection conn) throws SQLException {
         ArrayList<Event> events = new ArrayList<>();
         Statement stmt = conn.createStatement();
@@ -269,13 +277,11 @@ public class Main {
         ResultSet results = stmt.executeQuery();
         while (results.next()) {
             int id = results.getInt("id");
-            String userName =results.getString("events.user_name");
             String category = results.getString("category");
             LocalDate date = LocalDate.parse(results.getString("date"));
             String location = results.getString("location");
             String title = results.getString("title");
-            String attendee = results.getString("attendee");
-            Event event = new Event(id, userName, category, date, location, title, attendee);
+            Event event = new Event(id, user.userName, category, date, location, title);
             events.add(event);
         }
         return events;

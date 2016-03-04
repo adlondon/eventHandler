@@ -10,27 +10,17 @@ public class Event {
     String category;
     LocalDate date;
     String location;
-    String host;
+    String userName;
     String title;
-    String attendee;
 
-    public Event(int id, String category, String location, LocalDate date, String host, String title, String attendee) {
+    public Event(int id, String userName, String category, LocalDate date, String location, String title) {
         this.id = id;
         this.category = category;
         this.date = date;
         this.location = location;
-        this.host = host;
         this.title = title;
-        this.attendee = attendee;
-    }
+        this.userName = userName;
 
-    public Event(int id, String host, String category, LocalDate date, String location, String title) {
-        this.category = category;
-        this.date = date;
-        this.id = id;
-        this.location = location;
-        this.host = host;
-        this.title = title;
     }
 
     public String getCategory() {
@@ -65,12 +55,12 @@ public class Event {
         this.location = location;
     }
 
-    public String getHost() {
-        return host;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setHost(String host) {
-        this.host = host;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public String getTitle() {
