@@ -53,12 +53,19 @@ public class Main {
                     if (user.password.equals(password)) {
                         Session session = request.session();
                         session.attribute("userName", name);
-                        return "";
+                        return "login success";
                     }
                     else {
-                        Spark.halt("403");
-                        return "";
+                        return "login fail";
                     }
+                })
+        );
+        Spark.post(
+                "/logout",
+                ((request, response) -> {
+                    Session session = request.session();
+                    session.invalidate();
+                    return "logged out";
                 })
         );
         Spark.post(
@@ -180,7 +187,7 @@ public class Main {
         stmt.setInt(1, id);
         ResultSet results = stmt.executeQuery();
             if (results.next()) {
-                String userName =results.getString("events.user_name");
+                String userName =results.getString("user_name");
                 String category = results.getString("category");
                 LocalDate date = LocalDate.parse(results.getString("date"));
                 String location = results.getString("location");
@@ -269,13 +276,11 @@ public class Main {
         ResultSet results = stmt.executeQuery();
         while (results.next()) {
             int id = results.getInt("id");
-            String userName =results.getString("events.user_name");
             String category = results.getString("category");
             LocalDate date = LocalDate.parse(results.getString("date"));
             String location = results.getString("location");
             String title = results.getString("title");
-            String attendee = results.getString("attendee");
-            Event event = new Event(id, userName, category, date, location, title);
+            Event event = new Event(id, user.userName, category, date, location, title);
             events.add(event);
         }
         return events;
