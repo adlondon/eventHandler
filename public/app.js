@@ -19,8 +19,8 @@ var page = {
   events: function () {
     $('.loginForm').on("submit", function (event) {
       event.preventDefault();
-      username = $('input[name ="username"]').val();
-      localStorage.setItem('username', username);
+      username = $('input[name ="userName"]').val();
+      localStorage.setItem('userName', username);
       var loginInfo = page.getLoginInfo();
 
       page.addLogin(loginInfo);
