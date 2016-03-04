@@ -25,12 +25,17 @@ var page = {
         var selectedPage = '.' + $(this).attr('rel');
         $(selectedPage).siblings('section').removeClass('active');
         $(selectedPage).addClass('active');
-    }  )
+    });
+
+    $('body').on("click", ".createSubmit" function (event) {
+      event.preventDefault();
+      addEvent();
+    } )
   },
 
   addLogin: function () {
     $.ajax ({
-      url: "http://tiny-tiny.herokuapp.com/collections/eventHandler-getAllEvents",
+      url:  ""
       method: "POST",
       success: function (successString) {
         console.log("SUCCESS OF LOGIN", successString);
@@ -44,6 +49,24 @@ var page = {
       }
     });
   },
+
+  addEvent: function (newEvent) {
+    $.ajax ({
+      url: "http://tiny-tiny.herokuapp.com/collections/eventHandler-getAllEvents",
+      method: "POST",
+      data: newEvent,
+      success: function (data) {
+        console.log("EVENT CREATED", data)
+      },
+      error: function (err) {
+        console.log("ERROR", err)
+      }
+    })
+  },
+
+
+
+
 
 
 
