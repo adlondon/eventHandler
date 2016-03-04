@@ -54,7 +54,7 @@ public class Main {
                     if (user.password.equals(password)) {
                         Session session = request.session();
                         session.attribute("userName", name);
-                        return "login success";
+                        return user.userName;
                     }
                     else {
                         return "login fail";
