@@ -32,6 +32,22 @@ section {
     height: 266px;
     width: 400px;
     margin-bottom: 4%; }
+    .searchContainer div .fa {
+      position: relative;
+      top: -185px;
+      color: red;
+      font-size: 51px;
+      left: 332px; }
+
+.userProfile {
+  display: flex;
+  flex-wrap: wrap;
+  flex-wrap: wrap;
+  justify-content: space-around; }
+  .userProfile div {
+    height: 266px;
+    width: 400px;
+    margin-bottom: 4%; }
 
 .party {
   background-image: url("http://jccannarbor.org/wp-content/uploads/2015/06/Birthday-Party-Picture-2.jpg");
@@ -45,5 +61,15 @@ section {
 
 .book_club {
   background-image: url("http://s3.foreveryoungadult.com/_uploads/images/22344/fyabc_goldengirls__span.jpg");
+  background-size: 100%;
+  background-repeat: no-repeat; }
+
+.RAVE {
+  background-image: url("http://www.lovethispic.com/uploaded_images/huge_rave.jpg");
+  background-size: 100%;
+  background-repeat: no-repeat; }
+
+.sports {
+  background-image: url("http://images.performgroup.com/di/library/omnisport/72/37/stephencurry410gettyus_argftwmm8jhr1gb2q5e5gt5fc.jpg?t=-1588522764");
   background-size: 100%;
   background-repeat: no-repeat; }
