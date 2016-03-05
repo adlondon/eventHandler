@@ -4,7 +4,8 @@ $(document).ready(function () {
 var username = "";
 var page = {
   url: {
-    getLogin: "/login"
+    getLogin: "/login",
+    addEvent: "/add-event"
   },
 
   init: function () {
@@ -20,7 +21,6 @@ var page = {
     $('.loginForm').on("submit", function (event) {
       event.preventDefault();
       username = $('input[name ="userName"]').val();
-      // localStorage.setItem('userName', username);
       var loginInfo = page.getLoginInfo();
       page.addLogin(loginInfo);
     });
@@ -32,10 +32,25 @@ var page = {
         $(selectedPage).addClass('active');
     });
 
-    $('body').on("click", ".createSubmit", function (event) {
+    $('.createForm').on("click", ".createSubmit", function (event) {
       event.preventDefault();
-      addEvent();
+      var eventInfo = page.getEventInfo();
+      page.addEvent(eventInfo);
+      $('input[name="title"]').val("");
+       $('input[name="category"]').val("");
+       $('input[name="date"]').val("");
+      $('input[name="location"]').val("");
+
+
+
     });
+
+    $('body').on('click', '.logout', function(event){
+      event.preventDefault();
+        $(this).closest('.mainContainer').addClass('inactive');
+        $(this).closest('.mainContainer').siblings('.login').removeClass('inactive');
+    });
+
   },
 
   addLogin: function (dataObj) {
@@ -58,13 +73,13 @@ var page = {
     });
   },
 
-  addEvent: function (newEvent) {
+  addEvent: function (newEventArr) {
     $.ajax ({
-      url: "",
+      url: page.url.addEvent,
       method: "POST",
-      data: newEvent,
-      success: function (data) {
-        console.log("EVENT CREATED", data)
+      data: newEventArr,
+      success: function (eventinfo) {
+        console.log("EVENT CREATED", eventinfo)
       },
       error: function (err) {
         console.log("ERROR", err)
@@ -79,7 +94,21 @@ var page = {
       userName: userName,
       password: password
     };
-  }
+  },
+
+  getEventInfo: function(){
+    var title = $('input[name="title"]').val();
+    var category = $('input[name="category"]').val();
+    var date = $('input[name="date"]').val();
+    var location = $('input[name="location"]').val();
+    return{
+      title: title,
+      category: category,
+      date: date,
+      location: location,
+      // userName: localStorage.getItem('userName'),
+    }
+  },
 
 
 
