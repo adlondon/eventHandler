@@ -98,7 +98,7 @@ var page = {
 
   getEventInfo: function(){
     var title = $('input[name="title"]').val();
-    var category = $('input[name="category"]').val();
+    var category = $('select[name="category"]').val();
     var date = $('input[name="date"]').val();
     var location = $('input[name="location"]').val();
     return{
