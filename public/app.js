@@ -39,11 +39,11 @@ var page = {
   },
 
   addLogin: function (dataArr) {
-  console.log('this is data', dataArr);
+  console.log('this is data', dataObj);
     $.ajax ({
       method: "POST",
       url: page.url.getLogin,
-      data: dataArr,
+      data: dataObj,
       success: function (username) {
         console.log("SUCCESS OF LOGIN", username);
         localStorage.setItem('userName', username)
