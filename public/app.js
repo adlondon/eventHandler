@@ -8,6 +8,7 @@ var page = {
     getLogin: "/login",
     addEvent: "/add-event",
     getAllEvents: "/get-all-events",
+    getHostEvents: "/get-host-events"
   },
 
   init: function () {
@@ -39,10 +40,10 @@ var page = {
       page.addAllEvents(page.getEvent());
     });
 
-    $('.events').on('click', function (event) {
+    $('.user').on('click', function (event) {
       event.preventDefault();
-      page.addAttendingEvents(page.getEvent())
-    })
+      page.addHostEvents(page.getAllHostEvent());
+    });
 
     $('.createForm').on("click", ".createSubmit", function (event) {
       event.preventDefault();
@@ -62,6 +63,12 @@ var page = {
         $(this).closest('.mainContainer').addClass('inactive');
         $(this).closest('.mainContainer').siblings('.login').removeClass('inactive');
     });
+
+    $('body').on('click', '.attending', function (event) {
+      event.preventDefault();
+      $(this).closest('div').append("<i class='fa fa-bookmark'>" + "</i>");
+
+    })
 
 
   },
@@ -148,7 +155,28 @@ var page = {
   });
 
 },
-// 
+getAllHostEvent: function() {
+$.ajax({
+  url: page.url.getHostEvents,
+  method: 'GET',
+  success: function (events) {
+      console.log("RECEIVED Events", events);
+      window.glob = events;
+      page.addHostEvents(JSON.parse(events));
+  },
+  error: function (err) {
+  }
+});
+},
+
+addHostEvents: function (arr) {
+$('.userProfile').html('');
+_.each(arr, function (el) {
+  var tmpl = _.template(templates.events);
+  $(".userProfile").prepend(tmpl(el));
+});
+},
+//
 // addAttendingEvents: function (arr) {
 //   $('.eventsAttending').html('');
 //   _.each(arr, function (el) {
