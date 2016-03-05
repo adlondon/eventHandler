@@ -90,25 +90,42 @@ public class MainTest {
         assertTrue(events.size() == 4);
     }
     @Test
-    public void testMyEvent() throws SQLException {
+    public void testSelectAllHostEvents() throws SQLException {
         Connection conn = startConnection();
         Main.insertUser(conn, "Alice", "");
         User user = Main.selectUser(conn, "Alice");
         LocalDate date = LocalDate.now();
-        date.now();
         Main.insertEvent(conn, new Event(1, user.userName, "doople", date, "dooplia", "doopleparty"), user);
-        Event event = Main.selectEvent(conn, 1);
-        assertTrue(event != null);
+        Main.insertEvent(conn, new Event(1, user.userName, "doople", date, "dooplia", "doopleparty"), user);
+        Main.insertEvent(conn, new Event(1, user.userName, "doople", date, "dooplia", "doopleparty"), user);
+        Main.insertEvent(conn, new Event(1, user.userName, "doople", date, "dooplia", "doopleparty"), user);
+        ArrayList<Event> events = Main.selectAllHostEvents(conn, user);
         endConnection(conn);
+        assertTrue(events.size() == 4);
     }
+    @Test
+    public void testSelectMyEvents() throws SQLException {
+        Connection conn = startConnection();
+        Main.insertUser(conn, "Alice", "");
+        User user = Main.selectUser(conn, "Alice");
+        LocalDate date = LocalDate.now();
+        Main.insertMyEvent(conn, new Event(1, user.userName, "doople", date, "dooplia", "doopleparty"), user);
+        Main.insertMyEvent(conn, new Event(1, user.userName, "doople", date, "dooplia", "doopleparty"), user);
+        Main.insertMyEvent(conn, new Event(1, user.userName, "doople", date, "dooplia", "doopleparty"), user);
+        Main.insertMyEvent(conn, new Event(1, user.userName, "doople", date, "dooplia", "doopleparty"), user);
+        ArrayList<Event> events = Main.selectMyEvents(conn, user);
+        endConnection(conn);
+        assertTrue(events.size() == 4);
+    }
+
     @Test
     public void testMyDelete() throws SQLException {
         Connection conn = startConnection();
         Main.insertUser(conn, "Alice", "");
         User user = Main.selectUser(conn, "Alice");
         LocalDate date = LocalDate.now();
-        Main.insertEvent(conn, new Event(1, user.userName, "doople", date, "dooplia", "doopleparty"), user);
-        Main.deleteEvent(conn, 1);
+        Main.insertMyEvent(conn, new Event(1, user.userName, "doople", date, "dooplia", "doopleparty"), user);
+        Main.deleteMyEvent(conn, 1);
         Event event = Main.selectEvent(conn, 1);
         endConnection(conn);
         assertTrue(event == null);
