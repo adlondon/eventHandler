@@ -1,11 +1,13 @@
 $(document).ready(function () {
   page.init()
+  page.addAllEvents(page.getEvent());
 })
 var username = "";
 var page = {
   url: {
     getLogin: "/login",
-    addEvent: "/add-event"
+    addEvent: "/add-event",
+    getAllEvents: "/get-all-events",
   },
 
   init: function () {
@@ -27,6 +29,7 @@ var page = {
 
     $('body').on("click", ".navli", function(event) {
         event.preventDefault();
+        // page.addAllEvents(page.getEvent());
         var selectedPage = '.' + $(this).attr('rel');
         $(selectedPage).siblings('section').removeClass('active');
         $(selectedPage).addClass('active');
@@ -50,6 +53,7 @@ var page = {
         $(this).closest('.mainContainer').addClass('inactive');
         $(this).closest('.mainContainer').siblings('.login').removeClass('inactive');
     });
+
 
   },
 
@@ -107,18 +111,33 @@ var page = {
       category: category,
       date: date,
       location: location,
-      // userName: localStorage.getItem('userName'),
+      complete: false
     }
   },
 
 
 
+  getEvent: function() {
+  $.ajax({
+    url: page.url.getAllEvents,
+    method: 'GET',
+    success: function (events) {
+        console.log("RECEIVED Events", events);
+        window.glob = events;
+        page.addAllEvents(JSON.parse(events));
+    },
+    error: function (err) {
+    }
+  });
+},
 
+  addAllEvents: function (arr) {
+  $('.searchContainer').html('');
+  _.each(arr, function (el) {
+    var tmpl = _.template(templates.events);
+    $(".searchContainer").prepend(tmpl(el));
+  });
 
-
-
-
-
-
+},
 
 }
