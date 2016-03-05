@@ -103,7 +103,15 @@ public class Main {
                     return "";
                 })
         );
-
+        Spark.get(
+                "/get-host-events",
+                ((request, response) -> {
+                    User user = getUserFromSession(request.session(), conn);
+                    ArrayList<Event> events = selectAllHostEvents(conn, user);
+                    JsonSerializer serializer = new JsonSerializer();
+                    return serializer.serialize(events);
+                })
+        );
 //        for paging maybe later
 //        Spark.get(
 //                "/get-events",
@@ -245,6 +253,23 @@ public class Main {
         }
         return events;
     }
+    public static ArrayList<Event> selectAllHostEvents(Connection conn, User user) throws SQLException {
+        ArrayList<Event> events = new ArrayList<>();
+        PreparedStatement stmt = conn.prepareStatement("SELECT * FROM events WHERE user_name = ?");
+        stmt.setString(1, user.userName);
+        ResultSet results = stmt.executeQuery();
+        while (results.next()) {
+            int id = results.getInt("id");
+            String category = results.getString("category");
+            LocalDate date = LocalDate.parse(results.getString("date"));
+            String location = results.getString("location");
+            String title = results.getString("title");
+            Event event = new Event(id, user.userName, category, date, location, title);
+            events.add(event);
+        }
+        return events;
+    }
+    //for paging if we get there
 //    public static ArrayList<Event> selectEvents(Connection conn, int offset) throws SQLException {
 //        ArrayList<Event> events = new ArrayList<>();
 //        PreparedStatement stmt = conn.prepareStatement("SELECT * FROM events LIMIT 10 OFFSET ?");
