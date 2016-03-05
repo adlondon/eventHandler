@@ -29,19 +29,28 @@ var page = {
 
     $('body').on("click", ".navli", function(event) {
         event.preventDefault();
-        // page.addAllEvents(page.getEvent());
         var selectedPage = '.' + $(this).attr('rel');
         $(selectedPage).siblings('section').removeClass('active');
         $(selectedPage).addClass('active');
     });
+
+    $('.search').on('click', function (event) {
+      event.preventDefault();
+      page.addAllEvents(page.getEvent());
+    });
+
+    $('.events').on('click', function (event) {
+      event.preventDefault();
+      page.addAttendingEvents(page.getEvent())
+    })
 
     $('.createForm').on("click", ".createSubmit", function (event) {
       event.preventDefault();
       var eventInfo = page.getEventInfo();
       page.addEvent(eventInfo);
       $('input[name="title"]').val("");
-       $('input[name="category"]').val("");
-       $('input[name="date"]').val("");
+      $('input[name="category"]').val("");
+      $('input[name="date"]').val("");
       $('input[name="location"]').val("");
 
 
@@ -139,5 +148,13 @@ var page = {
   });
 
 },
+// 
+// addAttendingEvents: function (arr) {
+//   $('.eventsAttending').html('');
+//   _.each(arr, function (el) {
+//     var attTmpl = _.template(templates.attending);
+//     $('.eventsAttending').prepend(attTmpl(el));
+//   })
+// }
 
 }
