@@ -36,6 +36,7 @@ public class Main {
                     String title = request.queryParams("title");
                     Event event = new Event(1, user.userName, category, date, location, title);
                     insertEvent(conn, event, user);
+                    System.out.println();
                     return "";
                 })
         );
@@ -160,7 +161,7 @@ public class Main {
     static void createTables(Connection conn) throws SQLException {
         Statement stmt = conn.createStatement();
         stmt.execute("CREATE TABLE IF NOT EXISTS users (id IDENTITY, user_name VARCHAR, password VARCHAR)");
-        stmt.execute("CREATE TABLE IF NOT EXISTS events (id IDENTITY, user_name VARCHAR, category VARCHAR, date VARCHAR, location VARCHAR, title VARCHAR)");
+        stmt.execute("CREATE TABLE IF NOT EXISTS events (id IDENTITY, user_name VARCHAR, category VARCHAR, date VARCHAR, location VARCHAR, title VARCHAR UNIQUE)");
         stmt.execute("CREATE TABLE IF NOT EXISTS myEvents (id IDENTITY, attendee VARCHAR, category VARCHAR, date VARCHAR, location VARCHAR, title VARCHAR)");
     }
     //selectEvents
