@@ -38,7 +38,7 @@ var page = {
     });
   },
 
-  addLogin: function (dataArr) {
+  addLogin: function (dataObj) {
   console.log('this is data', dataObj);
     $.ajax ({
       method: "POST",
