@@ -32,11 +32,14 @@ var page = {
         $(selectedPage).addClass('active');
     });
 
-    $('body').on("click", ".createSubmit", function (event) {
+    $('.createForm').on("click", ".createSubmit", function (event) {
       event.preventDefault();
       var eventInfo = page.getEventInfo();
       page.addEvent(eventInfo);
-      $('.createForm').val('');
+      $('input[name="title"]').val("");
+       $('input[name="category"]').val("");
+       $('input[name="date"]').val("");
+      $('input[name="location"]').val("");
 
 
 
