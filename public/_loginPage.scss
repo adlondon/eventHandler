@@ -1,15 +1,12 @@
-.inactive {
-  display: none;
-}
 
-.loginForm{
-  margin: 0 auto;
-  width: 40%;
-  height: 400px;
-  background-color: lightgray;
-  visibility: center;
-  .tryAgain {
-    text-align: center;
-    color: red;
-  }
+
+.login{
+  // display: flex;
+  justify-content: center;
+  .loginForm{
+    justify-content: center;
+    input {
+
+    }
+    }
 }

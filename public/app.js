@@ -9,6 +9,7 @@ var page = {
     addEvent: "/add-event",
     getAllEvents: "/get-all-events",
     getHostEvents: "/get-host-events"
+
   },
 
   init: function () {
@@ -41,9 +42,14 @@ var page = {
     });
 
     $('.user').on('click', function (event) {
+     event.preventDefault();
+     page.addHostEvents(page.getAllHostEvent());
+   });
+
+    $('.events').on('click', function (event) {
       event.preventDefault();
-      page.addHostEvents(page.getAllHostEvent());
-    });
+      page.addAttendingEvents(page.getEvent())
+    })
 
     $('.createForm').on("click", ".createSubmit", function (event) {
       event.preventDefault();
@@ -60,15 +66,9 @@ var page = {
 
     $('body').on('click', '.logout', function(event){
       event.preventDefault();
-        $(this).closest('.mainContainer').addClass('inactive');
-        $(this).closest('.mainContainer').siblings('.login').removeClass('inactive');
+        $(this).closest('.mainContainer').removeClass('active');
+        $(this).closest('.mainContainer').siblings('.login').addClass('active');
     });
-
-    $('body').on('click', '.attending', function (event) {
-      event.preventDefault();
-      $(this).closest('div').append("<i class='fa fa-bookmark'>" + "</i>");
-
-    })
 
 
   },
@@ -86,8 +86,8 @@ var page = {
          $('.loginForm').prepend('<div class="tryAgain">That username already exists. Please try again.</div>')
          }
          else {
-           $('.login').addClass("inactive");
-           $('.mainContainer').removeClass("inactive");
+           $('.mainContainer').addClass("active");
+           $('.login').removeClass("active");
          }
       }
     });
@@ -127,7 +127,7 @@ var page = {
       category: category,
       date: date,
       location: location,
-      complete: false
+      // complete: false
     }
   },
 
@@ -155,6 +155,7 @@ var page = {
   });
 
 },
+
 getAllHostEvent: function() {
 $.ajax({
   url: page.url.getHostEvents,
@@ -176,13 +177,13 @@ _.each(arr, function (el) {
   $(".userProfile").prepend(tmpl(el));
 });
 },
-//
+
 // addAttendingEvents: function (arr) {
 //   $('.eventsAttending').html('');
 //   _.each(arr, function (el) {
-//     var attTmpl = _.template(templates.attending);
+//     var attTmpl = _.template(templates.events);
 //     $('.eventsAttending').prepend(attTmpl(el));
 //   })
-// }
+// },
 
 }

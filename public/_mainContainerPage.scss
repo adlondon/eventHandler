@@ -1,16 +1,19 @@
+
 ul {
   display: flex;
   list-style: none;
+  justify-content: center;
   li {
-
-    padding:2%;
+    display:flex;
+    padding:2% 8%;
+    width: 100%;
   }
+
 }
 
-.active{
-  visibility: visible;;
-}
 
-section{
-  visibility: hidden;
+.mainContainer {
+  // width: 85%;
+  flex-wrap: wrap;
+  justify-content: space-around;;
 }

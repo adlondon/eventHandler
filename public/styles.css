@@ -1,37 +1,28 @@
-.inactive {
-  display: none; }
-
-.loginForm {
-  margin: 0 auto;
-  width: 40%;
-  height: 400px;
-  background-color: lightgray;
-  visibility: center; }
-  .loginForm .tryAgain {
-    text-align: center;
-    color: red; }
+.login {
+  justify-content: center; }
+  .login .loginForm {
+    justify-content: center; }
 
 ul {
   display: flex;
-  list-style: none; }
+  list-style: none;
+  justify-content: center; }
   ul li {
-    padding: 2%; }
+    display: flex;
+    padding: 2% 8%;
+    width: 100%; }
 
-.active {
-  visibility: visible; }
-
-section {
-  visibility: hidden; }
-
-.searchContainer {
-  display: flex;
-  flex-wrap: wrap;
+.mainContainer {
   flex-wrap: wrap;
   justify-content: space-around; }
+
+.searchContainer {
+  flex-wrap: wrap; }
   .searchContainer div {
-    height: 266px;
-    width: 400px;
-    margin-bottom: 4%; }
+    width: 30%;
+    margin: 1.6%;
+    padding: 10px;
+    color: white; }
     .searchContainer div .fa {
       position: relative;
       top: -185px;
@@ -40,33 +31,45 @@ section {
       left: 332px; }
 
 .userProfile {
-  display: flex;
-  flex-wrap: wrap;
-  flex-wrap: wrap;
-  justify-content: space-around; }
+  flex-wrap: wrap; }
   .userProfile div {
-    height: 266px;
-    width: 400px;
-    margin-bottom: 4%; }
+    width: 30%;
+    margin: 1.6%;
+    padding: 10px;
+    color: white;
+    text-shadow: 2px 2px #ff0000; }
+
+.active {
+  display: flex; }
+
+section {
+  width: 85%;
+  display: none; }
+
+body > div {
+  display: none; }
+
+* {
+  box-sizing: border-box; }
 
 .party {
-  background-image: url("http://jccannarbor.org/wp-content/uploads/2015/06/Birthday-Party-Picture-2.jpg");
+  background-image: url("https://images.unsplash.com/photo-1438557068880-c5f474830377?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&w=1080&fit=max&s=7f27ee4116060e36d863593021bb6cbf");
   background-size: 100%;
   background-repeat: no-repeat; }
 
 .redneck_yardsale {
-  background-image: url("https://lifeintheboomerlane.files.wordpress.com/2014/06/yard-sale-dude-for-web.jpg");
+  background-image: url("how-to-have-a-yard-sale.jpg");
   background-size: 100%;
   background-repeat: no-repeat; }
 
 .book_club {
-  background-image: url("http://s3.foreveryoungadult.com/_uploads/images/22344/fyabc_goldengirls__span.jpg");
+  background-image: url("https://images.unsplash.com/photo-1445445290350-18a3b86e0b5a?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&w=1080&fit=max&s=94a520f6f1b84339a66edd8162d429ed");
   background-size: 100%;
   background-repeat: no-repeat; }
 
 .RAVE {
-  background-image: url("http://www.lovethispic.com/uploaded_images/huge_rave.jpg");
-  background-size: 100%;
+  background-image: url("https://images.unsplash.com/photo-1429514513361-8fa32282fd5f?crop=entropy&dpr=2&fit=crop&fm=jpg&h=600&ixjsv=2.1.0&ixlib=rb-0.3.5&q=50&w=1275");
+  background-size: 150%;
   background-repeat: no-repeat; }
 
 .sports {
