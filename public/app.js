@@ -120,7 +120,7 @@ var page = {
       category: category,
       date: date,
       location: location,
-      complete: false
+      // complete: false
     }
   },
 
@@ -148,13 +148,13 @@ var page = {
   });
 
 },
-// 
-// addAttendingEvents: function (arr) {
-//   $('.eventsAttending').html('');
-//   _.each(arr, function (el) {
-//     var attTmpl = _.template(templates.attending);
-//     $('.eventsAttending').prepend(attTmpl(el));
-//   })
-// }
+
+addAttendingEvents: function (arr) {
+  $('.eventsAttending').html('');
+  _.each(arr, function (el) {
+    var attTmpl = _.template(templates.attending);
+    $('.eventsAttending').prepend(attTmpl(el));
+  })
+}
 
 }
