@@ -8,6 +8,8 @@ var page = {
     getLogin: "/login",
     addEvent: "/add-event",
     getAllEvents: "/get-all-events",
+    getHostEvents: "/get-host-events"
+
   },
 
   init: function () {
@@ -39,6 +41,11 @@ var page = {
       page.addAllEvents(page.getEvent());
     });
 
+    $('.user').on('click', function (event) {
+     event.preventDefault();
+     page.addHostEvents(page.getAllHostEvent());
+   });
+
     $('.events').on('click', function (event) {
       event.preventDefault();
       page.addAttendingEvents(page.getEvent())
@@ -59,8 +66,8 @@ var page = {
 
     $('body').on('click', '.logout', function(event){
       event.preventDefault();
-        $(this).closest('.mainContainer').addClass('inactive');
-        $(this).closest('.mainContainer').siblings('.login').removeClass('inactive');
+        $(this).closest('.mainContainer').removeClass('active');
+        $(this).closest('.mainContainer').siblings('.login').addClass('active');
     });
 
 
@@ -79,8 +86,8 @@ var page = {
          $('.loginForm').prepend('<div class="tryAgain">That username already exists. Please try again.</div>')
          }
          else {
-           $('.login').addClass("inactive");
-           $('.mainContainer').removeClass("inactive");
+           $('.mainContainer').addClass("active");
+           $('.login').removeClass("active");
          }
       }
     });
@@ -149,12 +156,34 @@ var page = {
 
 },
 
-addAttendingEvents: function (arr) {
-  $('.eventsAttending').html('');
-  _.each(arr, function (el) {
-    var attTmpl = _.template(templates.events);
-    $('.eventsAttending').prepend(attTmpl(el));
-  })
-}
+getAllHostEvent: function() {
+$.ajax({
+  url: page.url.getHostEvents,
+  method: 'GET',
+  success: function (events) {
+      console.log("RECEIVED Events", events);
+      window.glob = events;
+      page.addHostEvents(JSON.parse(events));
+  },
+  error: function (err) {
+  }
+});
+},
+
+addHostEvents: function (arr) {
+$('.userProfile').html('');
+_.each(arr, function (el) {
+  var tmpl = _.template(templates.events);
+  $(".userProfile").prepend(tmpl(el));
+});
+},
+
+// addAttendingEvents: function (arr) {
+//   $('.eventsAttending').html('');
+//   _.each(arr, function (el) {
+//     var attTmpl = _.template(templates.events);
+//     $('.eventsAttending').prepend(attTmpl(el));
+//   })
+// },
 
 }
