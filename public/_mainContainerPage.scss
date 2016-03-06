@@ -8,9 +8,9 @@ ul {
 }
 
 .active{
-  visibility: visible;;
+  display: flex;
 }
 
 section{
-  visibility: hidden;
+  display: none;
 }

@@ -152,7 +152,7 @@ var page = {
 addAttendingEvents: function (arr) {
   $('.eventsAttending').html('');
   _.each(arr, function (el) {
-    var attTmpl = _.template(templates.,);
+    var attTmpl = _.template(templates.events);
     $('.eventsAttending').prepend(attTmpl(el));
   })
 }

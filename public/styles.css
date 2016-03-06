@@ -18,13 +18,12 @@ ul {
     padding: 2%; }
 
 .active {
-  visibility: visible; }
+  display: flex; }
 
 section {
-  visibility: hidden; }
+  display: none; }
 
 .searchContainer {
-  display: flex;
   flex-wrap: wrap;
   flex-wrap: wrap;
   justify-content: space-around; }
@@ -40,7 +39,6 @@ section {
       left: 332px; }
 
 .userProfile {
-  display: flex;
   flex-wrap: wrap;
   flex-wrap: wrap;
   justify-content: space-around; }
