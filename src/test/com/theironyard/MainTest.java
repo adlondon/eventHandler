@@ -117,17 +117,17 @@ public class MainTest {
         endConnection(conn);
         assertTrue(events.size() == 4);
     }
-
-    @Test
-    public void testMyDelete() throws SQLException {
-        Connection conn = startConnection();
-        Main.insertUser(conn, "Alice", "");
-        User user = Main.selectUser(conn, "Alice");
-        LocalDate date = LocalDate.now();
-        Main.insertMyEvent(conn, new Event(1, user.userName, "doople", date, "dooplia", "doopleparty"), user);
-        Main.deleteMyEvent(conn, 1);
-        Event event = Main.selectEvent(conn, 1);
-        endConnection(conn);
-        assertTrue(event == null);
-    }
+//
+//    @Test
+//    public void testMyDelete() throws SQLException {
+//        Connection conn = startConnection();
+//        Main.insertUser(conn, "Alice", "");
+//        User user = Main.selectUser(conn, "Alice");
+//        LocalDate date = LocalDate.now();
+//        Main.insertMyEvent(conn, new Event(1, user.userName, "doople", date, "dooplia", "doopleparty"), user);
+//        Main.deleteMyEvent(conn, 1);
+//        Event event = Main.selectEvent(conn, 1);
+//        endConnection(conn);
+//        assertTrue(event == null);
+//    }
 }
