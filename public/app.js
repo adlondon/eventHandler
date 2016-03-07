@@ -83,11 +83,12 @@ var page = {
         console.log("SUCCESS OF LOGIN", username);
         localStorage.setItem('userName', username)
          if (username === "login fail") {
-         $('.loginForm').prepend('<div class="tryAgain">That username already exists. Please try again.</div>')
+         $('.loginError').addClass("show");
          }
          else {
            $('.mainContainer').addClass("active");
            $('.login').removeClass("active");
+           $('.loginError').removeClass("show")
          }
       }
     });

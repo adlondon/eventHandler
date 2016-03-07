@@ -1,18 +1,86 @@
 .login {
   justify-content: center; }
   .login .loginForm {
-    justify-content: center; }
-
-ul {
-  display: flex;
-  list-style: none;
-  justify-content: center; }
-  ul li {
     display: flex;
-    padding: 2% 8%;
-    width: 100%; }
+    background-color: #4D95CC;
+    border-radius: 5px;
+    justify-content: center;
+    margin-top: 100px;
+    align-items: center;
+    flex-direction: column;
+    height: 300px;
+    width: 30%;
+    box-shadow: 0px 2px 5px #282835; }
+    .login .loginForm h1 {
+      color: #CEFF6D;
+      padding: 20px;
+      font-size: 35px;
+      font-weight: 800;
+      display: flex; }
+    .login .loginForm p {
+      display: none;
+      color: #FFB56B; }
+      .login .loginForm p span {
+        color: #CEFF6D;
+        font-weight: 800; }
+    .login .loginForm .show {
+      display: block; }
+    .login .loginForm input {
+      background-color: #F7FFFB;
+      color: #282835;
+      width: 85%;
+      margin-top: 15px;
+      font-size: 20px;
+      border-radius: 5px; }
+    .login .loginForm input[type="submit"] {
+      padding: 2px;
+      background-color: #FFB56B;
+      width: inherit;
+      border: none;
+      box-shadow: 0px 2px 3px #282835; }
+
+header {
+  flex: auto;
+  background-color: #4D95CC;
+  padding: 0 10px; }
+  header nav {
+    display: flex; }
+    header nav ul {
+      display: flex;
+      list-style: none;
+      justify-content: flex-start; }
+      header nav ul .navli {
+        color: #F7FFFB;
+        padding: 20px;
+        font-size: 24px;
+        font-weight: 700;
+        display: flex;
+        transition: color 0.5s ease; }
+      header nav ul .navli:hover {
+        color: #FFB56B; }
+      header nav ul span {
+        color: #CEFF6D;
+        padding: 20px;
+        font-size: 24px;
+        font-weight: 700;
+        display: flex; }
+    header nav .right {
+      display: flex;
+      flex: auto;
+      list-style: none;
+      justify-content: flex-end; }
+      header nav .right li {
+        justify-content: flex-end;
+        color: #F7FFFB;
+        padding: 20px;
+        font-size: 24px;
+        font-weight: 700;
+        transition: color 0.5s ease; }
+      header nav .right li:hover {
+        color: #FFB56B; }
 
 .mainContainer {
+  background-color: #F7FFFB;
   flex-wrap: wrap;
   justify-content: space-around; }
 
@@ -21,8 +89,10 @@ ul {
   .searchContainer div {
     width: 30%;
     margin: 1.6%;
-    padding: 10px;
-    color: white; }
+    padding: 15px;
+    color: white;
+    text-shadow: 2px 2px 4px black;
+    border-radius: 2px; }
     .searchContainer div .fa {
       position: relative;
       top: -185px;
@@ -35,9 +105,10 @@ ul {
   .userProfile div {
     width: 30%;
     margin: 1.6%;
-    padding: 10px;
-    color: white;
-    text-shadow: 2px 2px #ff0000; }
+    padding: 15px;
+    color: #F7FFFB;
+    text-shadow: 2px 2px 4px black;
+    border-radius: 2px; }
 
 .active {
   display: flex; }
@@ -50,15 +121,23 @@ body > div {
   display: none; }
 
 * {
-  box-sizing: border-box; }
+  font-family: Ubuntu;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0; }
+  * textarea:focus, * input:focus {
+    outline: none; }
+
+body {
+  background-color: #F7FFFB; }
 
 .party {
   background-image: url("https://images.unsplash.com/photo-1438557068880-c5f474830377?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&w=1080&fit=max&s=7f27ee4116060e36d863593021bb6cbf");
   background-size: 100%;
   background-repeat: no-repeat; }
 
-.redneck_yardsale {
-  background-image: url("how-to-have-a-yard-sale.jpg");
+.yardsale {
+  background-image: url("https://unsplash.com/photos/4fwRyKISwfk");
   background-size: 100%;
   background-repeat: no-repeat; }
 
@@ -67,12 +146,12 @@ body > div {
   background-size: 100%;
   background-repeat: no-repeat; }
 
-.RAVE {
-  background-image: url("https://images.unsplash.com/photo-1429514513361-8fa32282fd5f?crop=entropy&dpr=2&fit=crop&fm=jpg&h=600&ixjsv=2.1.0&ixlib=rb-0.3.5&q=50&w=1275");
-  background-size: 150%;
+.concert {
+  background-image: url("https://images.unsplash.com/46/unsplash_52c319226cefb_1.JPG?crop=entropy&dpr=2&fit=crop&fm=jpg&h=600&ixjsv=2.1.0&ixlib=rb-0.3.5&q=50&w=1275");
+  background-size: 100%;
   background-repeat: no-repeat; }
 
 .sports {
-  background-image: url("http://images.performgroup.com/di/library/omnisport/72/37/stephencurry410gettyus_argftwmm8jhr1gb2q5e5gt5fc.jpg?t=-1588522764");
+  background-image: url("https://images.unsplash.com/photo-1417716226287-2f8cd2e80274?crop=entropy&dpr=2&fit=crop&fm=jpg&h=600&ixjsv=2.1.0&ixlib=rb-0.3.5&q=50&w=1275");
   background-size: 100%;
   background-repeat: no-repeat; }
