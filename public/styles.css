@@ -92,7 +92,7 @@ header {
     padding: 15px;
     color: white;
     text-shadow: 2px 2px 4px black;
-    border-radius: 2px; }
+    border-radius: 5px; }
     .searchContainer div .fa {
       position: relative;
       top: -185px;
@@ -108,7 +108,25 @@ header {
     padding: 15px;
     color: #F7FFFB;
     text-shadow: 2px 2px 4px black;
-    border-radius: 2px; }
+    border-radius: 5px; }
+
+.createForm {
+  display: flex;
+  flex: auto;
+  flex-wrap: wrap;
+  justify-content: space-around; }
+  .createForm input, .createForm select {
+    margin-top: 35px;
+    width: 40%;
+    height: 40px;
+    border: 1px solid gainsboro;
+    border-radius: 5px;
+    padding: 6px; }
+  .createForm input[type="submit"] {
+    padding: 2px;
+    background-color: #FFB56B;
+    border: none;
+    box-shadow: 0px 2px 3px #282835; }
 
 .active {
   display: flex; }
@@ -128,16 +146,13 @@ body > div {
   * textarea:focus, * input:focus {
     outline: none; }
 
-body {
-  background-color: #F7FFFB; }
-
 .party {
   background-image: url("https://images.unsplash.com/photo-1438557068880-c5f474830377?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&w=1080&fit=max&s=7f27ee4116060e36d863593021bb6cbf");
   background-size: 100%;
   background-repeat: no-repeat; }
 
 .yardsale {
-  background-image: url("https://unsplash.com/photos/4fwRyKISwfk");
+  background-image: url("http://travelaway.me/wp-content/uploads/2012/06/Rome-flea-market.jpg");
   background-size: 100%;
   background-repeat: no-repeat; }
 
@@ -148,10 +163,10 @@ body {
 
 .concert {
   background-image: url("https://images.unsplash.com/46/unsplash_52c319226cefb_1.JPG?crop=entropy&dpr=2&fit=crop&fm=jpg&h=600&ixjsv=2.1.0&ixlib=rb-0.3.5&q=50&w=1275");
-  background-size: 100%;
+  background-size: 120%;
   background-repeat: no-repeat; }
 
 .sports {
   background-image: url("https://images.unsplash.com/photo-1417716226287-2f8cd2e80274?crop=entropy&dpr=2&fit=crop&fm=jpg&h=600&ixjsv=2.1.0&ixlib=rb-0.3.5&q=50&w=1275");
-  background-size: 100%;
+  background-size: 120%;
   background-repeat: no-repeat; }
