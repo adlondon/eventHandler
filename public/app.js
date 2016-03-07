@@ -51,7 +51,7 @@ var page = {
       page.addAttendingEvents(page.getEvent())
     })
 
-    $('.createForm').on("click", ".createSubmit", function (event) {
+    $('input[name="eventSubmit"]').on("click", function (event) {
       event.preventDefault();
       var eventInfo = page.getEventInfo();
       page.addEvent(eventInfo);

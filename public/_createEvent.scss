@@ -1,0 +1,20 @@
+.createForm {
+  display: flex;
+  flex: auto;
+  flex-wrap: wrap;
+  justify-content: space-around;;
+  input, select {
+    margin-top: 35px;
+    width:40%;
+    height: 40px;
+    border: 1px solid gainsboro;
+    border-radius: 5px;
+    padding: 6px;
+  }
+  input[type="submit"] {
+    padding: 2px;
+    background-color: #FFB56B;
+    border: none;
+    box-shadow: 0px 2px 3px #282835;
+  }
+}
