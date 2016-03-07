@@ -109,10 +109,10 @@ public class MainTest {
 //        Main.insertUser(conn, "Alice", "");
 //        User user = Main.selectUser(conn, "Alice");
 //        LocalDate date = LocalDate.now();
-//        Main.insertMyEvent(conn, new Event(1, user.getUserName(), "doople", date, "dooplia", "dooplepary"), user);
-//        Main.insertMyEvent(conn, new Event(2, user.getUserName(), "doople", date, "dooplia", "dooplepaty"), user);
-//        Main.insertMyEvent(conn, new Event(3, user.getUserName(), "doople", date, "dooplia", "doopleprty"), user);
-//        Main.insertMyEvent(conn, new Event(4, user.getUserName(), "doople", date, "dooplia", "dooplearty"), user);
+//        Main.insertMyEvent(conn, 1, user);
+//        Main.insertMyEvent(conn, 2, user);
+//        Main.insertMyEvent(conn, 3, user);
+//        Main.insertMyEvent(conn, 4, user);
 //        ArrayList<Event> events = Main.selectMyEvents(conn, user);
 //        endConnection(conn);
 //        assertTrue(events.size() == 4);
@@ -124,7 +124,7 @@ public class MainTest {
         Main.insertUser(conn, "Alice", "");
         User user = Main.selectUser(conn, "Alice");
         LocalDate date = LocalDate.now();
-        Main.insertMyEvent(conn, new Event(1, user.getUserName(), "doople", date, "dooplia", "doopleparty"), user);
+        Main.insertMyEvent(conn, 1, user);
         Main.deleteMyEvent(conn, 1, user);
         Event event = Main.selectEvent(conn, 1);
         endConnection(conn);

@@ -64,7 +64,7 @@ public class Main {
                     String location = request.queryParams("location");
                     String title = request.queryParams("title");
 
-                    if (category == null) {
+                    if (category.equals("void")) {
                         logger.error("category input is empty");
                         Spark.halt(400, "category input is empty");
                     }
@@ -134,7 +134,7 @@ public class Main {
                         String location = request.queryParams("location");
                         String title = request.queryParams("title");
                         //3 checks to see if input was given, if no input the value is not changed within the local object
-                        if (category != null) {
+                        if (category != null || !category.equals("void")) {//or void check i cant test what the drop down returns until the js is written
                             event.setCategory(category);
                         }
                         if (!date.isEmpty()) {
@@ -220,31 +220,18 @@ public class Main {
                         logger.error("user not logged in");
                         Spark.halt(400, "user not logged in");
                     }
-                    String category = request.queryParams("category");
-                    String dateStr = request.queryParams("date");
-                    String location = request.queryParams("location");
-                    String title = request.queryParams("title");
-
-                    if (category == null) {
-                        logger.error("category input is empty");
-                        Spark.halt(400, "category input is empty");
+                    try {
+                        int index = Integer.valueOf(request.queryParams("id"));
+                        insertMyEvent(conn, index, user);
                     }
-                    if (dateStr.isEmpty()) {
-                        logger.error("date input is empty");
-                        Spark.halt(400, "date input is empty");
+                    catch (NumberFormatException e) {
+                        logger.error("a non int was served as an id");
+                        Spark.halt(400, "a non int was served as an id" + e.getMessage());
                     }
-                    if (location.isEmpty()) {
-                        logger.error("location input is empty");
-                        Spark.halt(400, "location input is empty");
+                    catch (SQLException e) {
+                        logger.error("error adding event");
+                        Spark.halt(500, "error adding event" + e.getMessage());
                     }
-                    if (title.isEmpty()) {
-                        logger.error("title input is empty");
-                        Spark.halt(400, "title input is empty");
-                    }
-
-                    LocalDate date = LocalDate.parse(dateStr);
-                    Event event = new Event(1, user.getUserName(), category, date, location, title);
-                    insertMyEvent(conn, event, user);
                     return "";
                 })
         );
@@ -374,10 +361,10 @@ public class Main {
         return events;
     }
 
-    public static void insertMyEvent(Connection conn, Event event, User user) throws SQLException {
+    public static void insertMyEvent(Connection conn, int id, User user) throws SQLException {
         PreparedStatement stmt = conn.prepareStatement("INSERT INTO myEvents VALUES(NULL, ?, ?)");
         stmt.setString(1, user.getUserName());
-        stmt.setInt(2, event.getId());
+        stmt.setInt(2, id);
         stmt.execute();
     }
     public static ArrayList<Event> selectMyEvents(Connection conn, User user) throws SQLException {
