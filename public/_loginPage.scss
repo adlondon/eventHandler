@@ -1,12 +1,54 @@
 
 
 .login{
-  // display: flex;
   justify-content: center;
   .loginForm{
+    display:flex;
+    background-color: #4D95CC;
+    border-radius: 5px;
     justify-content: center;
+    margin-top: 100px;
+    align-items: center;
+    flex-direction: column;
+    height:300px;
+    width: 30%;
+    box-shadow: 0px 2px 5px #282835;
+    h1 {
+      color: #CEFF6D;
+      padding: 20px;
+      font-size: 35px;
+      font-weight: 800;
+      display:flex;
+    }
+    p {
+      display:none;
+      color: #FF0700;
+      span {
+        color: #CEFF6D;
+        font-size: 35px;
+        font-weight: 800;
+
+
+      }
+    }
+    .show {
+      display: block;
+    }
     input {
+      background-color: #F7FFFB;
+      color: #282835;
+      width: 85%;
+      margin-top: 15px;
+      font-size: 20px;
+      border-radius: 5px;
+    }
+    input[type="submit"] {
+      padding: 2px;
+      background-color: #FFB56B;
+      width: inherit;
+      border: none;
+      box-shadow: 0px 2px 3px #282835;
 
     }
-    }
+  }
 }

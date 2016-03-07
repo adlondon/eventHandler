@@ -5,11 +5,8 @@ var templates = {};
   "<h1><%= title %></h1>",
   "<p> Hosted By <%= userName %></p>",
   "<p><%= location %></p>",
-  "<p><%= date %></p>",
+  "<p><%= date.dayOfWeek %>, <%= date.month %><%= date.dayOfMonth %></p>",
   "<input name = 'completed' type='checkbox' class='attending'>",
-  // "<% if(complete) { %>",
-  // "line",
-  // "<% } %>",
   "</input>",
   "</div>"].join("");
 
@@ -21,9 +18,6 @@ var templates = {};
       "<p><%= location %></p>",
       "<p><%= date %></p>",
       "<input type='checkbox' class='attending'>",
-      // "<% if(complete) { %>",
-      // "line",
-      // "<% } %>",
       "</input>",
       "</div>",
       "<% } %>"
