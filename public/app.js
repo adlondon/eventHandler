@@ -7,7 +7,8 @@ var page = {
     getLogin: "/login",
     addEvent: "/add-event",
     getAllEvents: "/get-all-events",
-    getHostEvents: "/get-host-events"
+    getHostEvents: "/get-host-events",
+    deleteUrl: "/delete"
 
   },
 
@@ -69,6 +70,14 @@ var page = {
         $(this).closest('.mainContainer').siblings('.login').addClass('active');
     });
 
+    $('body').on('click', 'button', function(event){
+      event.preventDefault();
+      var id = $(this).data('id');
+      window.glob = id;
+      page.delete(id);
+
+    })
+
 
   },
 
@@ -128,7 +137,7 @@ var page = {
       category: category,
       date: date,
       location: location,
-      // complete: false
+      // id: id
     }
   },
 
@@ -174,9 +183,24 @@ $.ajax({
 addHostEvents: function (arr) {
 $('.userProfile').html('');
 _.each(arr, function (el) {
-  var tmpl = _.template(templates.events);
+  var tmpl = _.template(temples.hostevents);
   $(".userProfile").prepend(tmpl(el));
 });
+},
+
+delete: function(id){
+  $.ajax({
+      method: 'POST',
+      url: page.url.deleteUrl,
+      data: {id: id},
+      success: function(data) {
+        console.log(data);
+        page.getAllHostEvent();
+      },
+      error: function(data) {
+        console.log("ERR",data);
+      }
+    })
 },
 
 // addAttendingEvents: function (arr) {
