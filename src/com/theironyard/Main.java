@@ -2,6 +2,8 @@ package com.theironyard;
 
 import jodd.json.JsonSerializer;
 import org.h2.tools.Server;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import spark.Session;
 import spark.Spark;
 
@@ -13,7 +15,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main {
-
+    final static Logger logger = LoggerFactory.getLogger(Main.class);
     public static void main(String[] args) throws SQLException, FileNotFoundException {
 	// write your code here
         Connection conn = DriverManager.getConnection("jdbc:h2:mem:eventHandler");
@@ -29,17 +31,22 @@ public class Main {
                 ((request, response) -> {
                     User user = getUserFromSession(request.session(), conn);
                     ArrayList<Event> events = selectAllEvents(conn);
-                    ArrayList<Event> myEvents = selectMyEvents(conn, user);
-                    if (myEvents != null) {
-                        for (Event event : events) {
-                            for (Event myEvent : myEvents) {
-                                if (event.getId() == myEvent.getId()) {
-                                    event.setGoing(true);
+                    try {
+                        ArrayList<Event> myEvents = selectMyEvents(conn, user);
+                        if (myEvents != null) {
+                            for (Event event : events) {
+                                for (Event myEvent : myEvents) {
+                                    if (event.getId() == myEvent.getId()) {
+                                        event.setGoing(true);
+                                    }
                                 }
                             }
                         }
                     }
-
+                    catch (NullPointerException e) {
+                        logger.error("user not logged in");
+                        Spark.halt(400, "user not logged in");
+                    }
                     JsonSerializer serializer = new JsonSerializer();
                     return serializer.serialize(events);
                 })
@@ -48,10 +55,33 @@ public class Main {
                 "/add-event",
                 ((request, response) -> {
                     User user = getUserFromSession(request.session(), conn);
+                    if (user == null) {
+
+                        Spark.halt(400, "user not logged in");
+                    }
                     String category = request.queryParams("category");
-                    LocalDate date = LocalDate.parse(request.queryParams("date"));
+                    String dateStr = request.queryParams("date");
                     String location = request.queryParams("location");
                     String title = request.queryParams("title");
+
+                    if (category == null) {
+                        logger.error("category input is empty");
+                        Spark.halt(400, "category input is empty");
+                    }
+                    if (dateStr.isEmpty()) {
+                        logger.error("date input is empty");
+                        Spark.halt(400, "date input is empty");
+                    }
+                    if (location.isEmpty()) {
+                        logger.error("location input is empty");
+                        Spark.halt(400, "location input is empty");
+                    }
+                    if (title.isEmpty()) {
+                        logger.error("title input is empty");
+                        Spark.halt(400, "title input is empty");
+                    }
+
+                    LocalDate date = LocalDate.parse(dateStr);
                     Event event = new Event(1, user.getUserName(), category, date, location, title);
                     insertEvent(conn, event, user);
                     System.out.println();
@@ -62,6 +92,10 @@ public class Main {
                 "/login",//accepts input form home page and creates a user which is stored in the user table
                 ((request, response) -> {
                     String name = request.queryParams("userName");
+                    if (name.isEmpty()) {
+                        logger.error("user name input is empty");
+                        Spark.halt(400, "user name input is empty");
+                    }
                     String password = request.queryParams("password");
                     User user = selectUser(conn, name);
                     if (user == null) {//checks if the user already exists in the database/adds user to database if not
@@ -91,34 +125,55 @@ public class Main {
         Spark.post(
                 "/update",
                 ((request, response) -> {
-                    int index = Integer.valueOf(request.queryParams("id"));
-                    Event event = selectEvent(conn, index);//pulls  data for the id 'index'
-                    String category = request.queryParams("category");
-                    String date = request.queryParams("date");
-                    String location = request.queryParams("location");
-                    String title = request.queryParams("title");
-                    //3 checks to see if input was given, if no input the value is not changed within the local object
-                    if (!category.isEmpty()) {
-                        event.setCategory(category);
+                    try {
+                        int index = Integer.valueOf(request.queryParams("id"));
+                        Event event = selectEvent(conn, index);//pulls  data for the id 'index'
+
+                        String category = request.queryParams("category");
+                        String date = request.queryParams("date");
+                        String location = request.queryParams("location");
+                        String title = request.queryParams("title");
+                        //3 checks to see if input was given, if no input the value is not changed within the local object
+                        if (category != null) {
+                            event.setCategory(category);
+                        }
+                        if (!date.isEmpty()) {
+                            event.setDate(LocalDate.parse(date));
+                        }
+                        if (!location.isEmpty()) {
+                            event.setLocation(location);
+                        }
+                        if (!title.isEmpty()) {
+                            event.setTitle(title);
+                        }
+                        updateEvent(conn, event);//takes local object and rewrites in database memory(only those fields that recieved input are changed)
                     }
-                    if (!date.isEmpty()) {
-                        event.setDate(LocalDate.parse(date));
+                    catch (NumberFormatException e) {
+                        logger.error("a non int was served as an id");
+                        Spark.halt(400, "a non int was served as an id" + e.getMessage());
                     }
-                    if (!location.isEmpty()) {
-                        event.setLocation(location);
+                    catch (SQLException e) {
+                        logger.error("error updating event");
+                        Spark.halt(500, "error updating event" + e.getMessage());
                     }
-                    if (!title.isEmpty()) {
-                        event.setTitle(title);
-                    }
-                    updateEvent(conn, event);//takes local object and rewrites in database memory(only those fields that recieved input are changed)
                     return "";
                 })
         );
         Spark.post(
                 "/delete",
                 ((request, response) -> {
-                    int index = Integer.valueOf(request.queryParams("id"));//grabs from a hidden type input the id to be deleted
-                    deleteEvent(conn, index);
+                    try {
+                        int index = Integer.valueOf(request.queryParams("id"));//grabs from a hidden type input the id to be deleted
+                        deleteEvent(conn, index);
+                    }
+                    catch (NumberFormatException e) {
+                        logger.error("a non int was served as an id");
+                        Spark.halt(400, "a non int was served as an id" + e.getMessage());
+                    }
+                    catch (SQLException e) {
+                        logger.error("error deleting event");
+                        Spark.halt(500, "error deleting event" + e.getMessage());
+                    }
                     return "";
                 })
         );
@@ -126,6 +181,10 @@ public class Main {
                 "/get-host-events",
                 ((request, response) -> {
                     User user = getUserFromSession(request.session(), conn);
+                    if (user == null) {
+                        logger.error("user not logged in");
+                        Spark.halt(400, "user not logged in");
+                    }
                     ArrayList<Event> events = selectAllHostEvents(conn, user);
                     JsonSerializer serializer = new JsonSerializer();
                     return serializer.serialize(events);
@@ -144,6 +203,10 @@ public class Main {
                 "/get-attending",
                 ((request, response) -> {
                     User user = getUserFromSession(request.session(), conn);
+                    if (user == null) {
+                        logger.error("user not logged in");
+                        Spark.halt(400, "user not logged in");
+                    }
                     ArrayList<Event> events = selectMyEvents(conn, user);
                     JsonSerializer serializer = new JsonSerializer();
                     return serializer.serialize(events);
@@ -153,23 +216,33 @@ public class Main {
                 "/add-attending",
                 ((request, response) -> {
                     User user = getUserFromSession(request.session(), conn);
+                    if (user == null) {
+                        logger.error("user not logged in");
+                        Spark.halt(400, "user not logged in");
+                    }
                     String category = request.queryParams("category");
-                    LocalDate date = LocalDate.parse(request.queryParams("date"));
+                    String dateStr = request.queryParams("date");
                     String location = request.queryParams("location");
                     String title = request.queryParams("title");
-                    Event event = new Event(1, user.getUserName(), category, date, location, title);
-                    insertMyEvent(conn, event, user);
-                    return "";
-                })
-        );
-        Spark.post(
-                "/add-attending",
-                ((request, response) -> {
-                    User user = getUserFromSession(request.session(), conn);
-                    String category = request.queryParams("category");
-                    LocalDate date = LocalDate.parse(request.queryParams("date"));
-                    String location = request.queryParams("location");
-                    String title = request.queryParams("title");
+
+                    if (category == null) {
+                        logger.error("category input is empty");
+                        Spark.halt(400, "category input is empty");
+                    }
+                    if (dateStr.isEmpty()) {
+                        logger.error("date input is empty");
+                        Spark.halt(400, "date input is empty");
+                    }
+                    if (location.isEmpty()) {
+                        logger.error("location input is empty");
+                        Spark.halt(400, "location input is empty");
+                    }
+                    if (title.isEmpty()) {
+                        logger.error("title input is empty");
+                        Spark.halt(400, "title input is empty");
+                    }
+
+                    LocalDate date = LocalDate.parse(dateStr);
                     Event event = new Event(1, user.getUserName(), category, date, location, title);
                     insertMyEvent(conn, event, user);
                     return "";
@@ -179,8 +252,22 @@ public class Main {
                 "/delete-attending",
                 ((request, response) -> {
                     User user = getUserFromSession(request.session(), conn);
-                    int index = Integer.valueOf(request.queryParams("id"));//grabs from a hidden type input the id to be deleted
-                    deleteMyEvent(conn, index, user);
+                    if (user == null) {
+                        logger.error("user not logged in");
+                        Spark.halt(400, "user not logged in");
+                    }
+                    try {
+                        int index = Integer.valueOf(request.queryParams("id"));//grabs from a hidden type input the id to be deleted
+                        deleteMyEvent(conn, index, user);
+                    }
+                    catch (NumberFormatException e) {
+                        logger.error("a non int was served as an id");
+                        Spark.halt(400, "a non int was served as an id" + e.getMessage());
+                    }
+                    catch (SQLException e) {
+                        logger.error("error deleting event");
+                        Spark.halt(500, "error deleting event" + e.getMessage());
+                    }
                     return "";
                 })
         );
