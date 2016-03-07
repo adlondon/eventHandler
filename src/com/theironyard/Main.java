@@ -162,18 +162,9 @@ public class Main {
         Spark.post(
                 "/delete",
                 ((request, response) -> {
-                    try {
+
                         int index = Integer.valueOf(request.queryParams("id"));//grabs from a hidden type input the id to be deleted
                         deleteEvent(conn, index);
-                    }
-                    catch (NumberFormatException e) {
-                        logger.error("a non int was served as an id");
-                        Spark.halt(400, "a non int was served as an id" + e.getMessage());
-                    }
-                    catch (SQLException e) {
-                        logger.error("error deleting event");
-                        Spark.halt(500, "error deleting event" + e.getMessage());
-                    }
                     return "";
                 })
         );
@@ -270,7 +261,6 @@ public class Main {
         stmt.execute("CREATE TABLE IF NOT EXISTS events (id IDENTITY, user_name VARCHAR, category VARCHAR, date VARCHAR, location VARCHAR, title VARCHAR)");
         stmt.execute("CREATE TABLE IF NOT EXISTS myEvents (id IDENTITY, attendee VARCHAR, event_id INT)");
     }
-    //selectEvents
     public static void insertUser(Connection conn, String name, String password) throws SQLException {
         PreparedStatement stmt = conn.prepareStatement("INSERT INTO users VALUES(NULL, ?, ?)");
         stmt.setString(1, name);
@@ -297,7 +287,6 @@ public class Main {
         stmt.setString(5, event.getTitle());
         stmt.execute();
     }
-
     public static Event selectEvent(Connection conn, int id) throws SQLException {
         PreparedStatement stmt = conn.prepareStatement("SELECT * FROM events WHERE events.id = ?");
         stmt.setInt(1, id);
@@ -312,7 +301,6 @@ public class Main {
         }
         return null;
     }
-
     static void deleteEvent(Connection conn, int id) throws SQLException {
         PreparedStatement stmt = conn.prepareStatement("DELETE FROM events WHERE id = ?");
         stmt.setInt(1, id);
@@ -327,7 +315,6 @@ public class Main {
         stmt.setInt(5, event.getId());
         stmt.execute();
     }
-
     public static ArrayList<Event> selectAllEvents(Connection conn) throws SQLException {
         ArrayList<Event> events = new ArrayList<>();
         Statement stmt = conn.createStatement();
@@ -360,7 +347,6 @@ public class Main {
         }
         return events;
     }
-
     public static void insertMyEvent(Connection conn, int id, User user) throws SQLException {
         PreparedStatement stmt = conn.prepareStatement("INSERT INTO myEvents VALUES(NULL, ?, ?)");
         stmt.setString(1, user.getUserName());
@@ -390,7 +376,6 @@ public class Main {
         stmt.setString(2, user.getUserName());
         stmt.execute();
     }
-
     static void populateDatabase(String fileName, Connection conn) throws FileNotFoundException, SQLException {
         insertUser(conn, "bob", "");
         insertUser(conn, "bill", "");

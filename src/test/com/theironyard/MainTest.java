@@ -106,16 +106,18 @@ public class MainTest {
 //    @Test
 //    public void testSelectMyEvents() throws SQLException {
 //        Connection conn = startConnection();
-//        Main.insertUser(conn, "Alice", "");
-//        User user = Main.selectUser(conn, "Alice");
+//        Main.insertUser(conn, "alice", "");
+//        Main.insertUser(conn, "bob", "");
+//        User user = Main.selectUser(conn, "alice");
+//        User bob = Main.selectUser(conn, "bob");
 //        LocalDate date = LocalDate.now();
 //        Main.insertMyEvent(conn, 1, user);
 //        Main.insertMyEvent(conn, 2, user);
 //        Main.insertMyEvent(conn, 3, user);
-//        Main.insertMyEvent(conn, 4, user);
+//        Main.insertMyEvent(conn, 4, bob);
 //        ArrayList<Event> events = Main.selectMyEvents(conn, user);
 //        endConnection(conn);
-//        assertTrue(events.size() == 4);
+//        assertTrue(events.size() == 3);
 //    }
 
     @Test
