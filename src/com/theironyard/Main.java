@@ -19,6 +19,7 @@ public class Main {
         Connection conn = DriverManager.getConnection("jdbc:h2:mem:eventHandler");
         createTables(conn);
         populateDatabase("testData.csv", conn);
+        populateMyEventsTable("testAttendingData.csv", conn);
         Spark.externalStaticFileLocation("public");
         Spark.init();
         Server.createWebServer().start();
@@ -51,7 +52,7 @@ public class Main {
                     LocalDate date = LocalDate.parse(request.queryParams("date"));
                     String location = request.queryParams("location");
                     String title = request.queryParams("title");
-                    Event event = new Event(1, user.userName, category, date, location, title);
+                    Event event = new Event(1, user.getUserName(), category, date, location, title);
                     insertEvent(conn, event, user);
                     System.out.println();
                     return "";
@@ -69,10 +70,10 @@ public class Main {
                     }
                     //grabs user data from database to check password entry
 
-                    if (user.password.equals(password)) {
+                    if (user.getPassword().equals(password)) {
                         Session session = request.session();
                         session.attribute("userName", name);
-                        return user.userName;
+                        return name;
                     }
                     else {
                         return "login fail";
@@ -101,7 +102,7 @@ public class Main {
                         event.setCategory(category);
                     }
                     if (!date.isEmpty()) {
-                        event.date = LocalDate.parse(date);
+                        event.setDate(LocalDate.parse(date));
                     }
                     if (!location.isEmpty()) {
                         event.setLocation(location);
@@ -156,7 +157,7 @@ public class Main {
                     LocalDate date = LocalDate.parse(request.queryParams("date"));
                     String location = request.queryParams("location");
                     String title = request.queryParams("title");
-                    Event event = new Event(1, user.userName, category, date, location, title);
+                    Event event = new Event(1, user.getUserName(), category, date, location, title);
                     insertMyEvent(conn, event, user);
                     return "";
                 })
@@ -169,7 +170,7 @@ public class Main {
                     LocalDate date = LocalDate.parse(request.queryParams("date"));
                     String location = request.queryParams("location");
                     String title = request.queryParams("title");
-                    Event event = new Event(1, user.userName, category, date, location, title);
+                    Event event = new Event(1, user.getUserName(), category, date, location, title);
                     insertMyEvent(conn, event, user);
                     return "";
                 })
@@ -192,7 +193,7 @@ public class Main {
     static void createTables(Connection conn) throws SQLException {
         Statement stmt = conn.createStatement();
         stmt.execute("CREATE TABLE IF NOT EXISTS users (id IDENTITY, user_name VARCHAR, password VARCHAR)");
-        stmt.execute("CREATE TABLE IF NOT EXISTS events (id IDENTITY, user_name VARCHAR, category VARCHAR, date VARCHAR, location VARCHAR, title VARCHAR UNIQUE)");
+        stmt.execute("CREATE TABLE IF NOT EXISTS events (id IDENTITY, user_name VARCHAR, category VARCHAR, date VARCHAR, location VARCHAR, title VARCHAR)");
         stmt.execute("CREATE TABLE IF NOT EXISTS myEvents (id IDENTITY, attendee VARCHAR, event_id INT)");
     }
     //selectEvents
@@ -215,11 +216,11 @@ public class Main {
     }
     public static void insertEvent(Connection conn, Event event, User user) throws SQLException {
         PreparedStatement stmt = conn.prepareStatement("INSERT INTO events VALUES(NULL, ?, ?, ?, ?, ?)");
-        stmt.setString(1, user.userName);
-        stmt.setString(2, event.category);
-        stmt.setString(3, event.date.toString());
-        stmt.setString(4, event.location);
-        stmt.setString(5, event.title);
+        stmt.setString(1, user.getUserName());
+        stmt.setString(2, event.getCategory());
+        stmt.setString(3, event.getDate().toString());
+        stmt.setString(4, event.getLocation());
+        stmt.setString(5, event.getTitle());
         stmt.execute();
     }
 
@@ -245,11 +246,11 @@ public class Main {
     }
     static void updateEvent(Connection conn, Event event) throws SQLException {
         PreparedStatement stmt = conn.prepareStatement("UPDATE events SET category = ?, date = ?, location = ?, title = ? WHERE id = ?");
-        stmt.setString(1, event.category);
-        stmt.setString(2, event.date.toString());
-        stmt.setString(3, event.location);
-        stmt.setString(4, event.title);
-        stmt.setInt(5, event.id);
+        stmt.setString(1, event.getCategory());
+        stmt.setString(2, event.getDate().toString());
+        stmt.setString(3, event.getLocation());
+        stmt.setString(4, event.getTitle());
+        stmt.setInt(5, event.getId());
         stmt.execute();
     }
 
@@ -272,7 +273,7 @@ public class Main {
     public static ArrayList<Event> selectAllHostEvents(Connection conn, User user) throws SQLException {
         ArrayList<Event> events = new ArrayList<>();
         PreparedStatement stmt = conn.prepareStatement("SELECT * FROM events WHERE user_name = ?");
-        stmt.setString(1, user.userName);
+        stmt.setString(1, user.getUserName());
         ResultSet results = stmt.executeQuery();
         while (results.next()) {
             int id = results.getInt("id");
@@ -280,7 +281,7 @@ public class Main {
             LocalDate date = LocalDate.parse(results.getString("date"));
             String location = results.getString("location");
             String title = results.getString("title");
-            Event event = new Event(id, user.userName, category, date, location, title);
+            Event event = new Event(id, user.getUserName(), category, date, location, title);
             events.add(event);
         }
         return events;
@@ -288,14 +289,14 @@ public class Main {
 
     public static void insertMyEvent(Connection conn, Event event, User user) throws SQLException {
         PreparedStatement stmt = conn.prepareStatement("INSERT INTO myEvents VALUES(NULL, ?, ?)");
-        stmt.setString(1, user.userName);
-        stmt.setInt(2, event.id);
+        stmt.setString(1, user.getUserName());
+        stmt.setInt(2, event.getId());
         stmt.execute();
     }
     public static ArrayList<Event> selectMyEvents(Connection conn, User user) throws SQLException {
         ArrayList<Event> events = new ArrayList<>();
         PreparedStatement stmt = conn.prepareStatement("SELECT * FROM events INNER JOIN myEvents ON events.id = myEvents.event_id WHERE attendee = ?");
-        stmt.setString(1, user.userName);
+        stmt.setString(1, user.getUserName());
         ResultSet results = stmt.executeQuery();
         while (results.next()) {
             int id = results.getInt("id");
@@ -312,7 +313,7 @@ public class Main {
     static void deleteMyEvent(Connection conn, int id, User user) throws SQLException {
         PreparedStatement stmt = conn.prepareStatement("DELETE FROM myEvents WHERE event_id = ? AND attendee = ?");
         stmt.setInt(1, id);
-        stmt.setString(2, user.userName);
+        stmt.setString(2, user.getUserName());
         stmt.execute();
     }
 
@@ -330,13 +331,28 @@ public class Main {
             insertTestData(conn, event);
         }
     }
+    static void populateMyEventsTable(String fileName, Connection conn) throws FileNotFoundException, SQLException {
+        File f = new File(fileName);
+        Scanner fileScanner = new Scanner(f);
+        fileScanner.nextLine();
+        while (fileScanner.hasNext()) {
+            String[] columns = fileScanner.nextLine().split(",");
+            insertTestMyEvent(conn, columns[1], Integer.valueOf(columns[2]));
+        }
+    }
+    static void insertTestMyEvent(Connection conn, String name, int id) throws SQLException {
+        PreparedStatement stmt = conn.prepareStatement("INSERT INTO myEvents VALUES(NULL, ?, ?)");
+        stmt.setString(1, name);
+        stmt.setInt(2, id);
+        stmt.execute();
+    }
     static void insertTestData(Connection conn, Event event) throws SQLException {
         PreparedStatement stmt = conn.prepareStatement("INSERT INTO events VALUES(NULL, ?, ?, ?, ?, ?)");
-        stmt.setString(1, event.userName);
-        stmt.setString(2, event.category);
-        stmt.setString(3, event.date.toString());
-        stmt.setString(4, event.location);
-        stmt.setString(5, event.title);
+        stmt.setString(1, event.getUserName());
+        stmt.setString(2, event.getCategory());
+        stmt.setString(3, event.getDate().toString());
+        stmt.setString(4, event.getLocation());
+        stmt.setString(5, event.getTitle());
         stmt.execute();
     }
 }
