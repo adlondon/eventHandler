@@ -90,15 +90,14 @@ header {
     width: 30%;
     margin: 1.6%;
     padding: 15px;
-    color: white;
+    color: #F7FFFB;
     text-shadow: 2px 2px 4px black;
-    border-radius: 5px; }
-    .searchContainer div .fa {
-      position: relative;
-      top: -185px;
-      color: red;
-      font-size: 51px;
-      left: 332px; }
+    border-radius: 5px;
+    background-color: transparent;
+    background-blend-mode: multiply;
+    transition: all 0.5s ease; }
+    .searchContainer div div:hover {
+      background-color: gray; }
 
 .userProfile {
   flex-wrap: wrap; }
@@ -108,7 +107,9 @@ header {
     padding: 15px;
     color: #F7FFFB;
     text-shadow: 2px 2px 4px black;
-    border-radius: 5px; }
+    border-radius: 5px;
+    background-color: gray;
+    background-blend-mode: multiply; }
 
 .createForm {
   display: flex;

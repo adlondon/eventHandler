@@ -1,6 +1,5 @@
 $(document).ready(function () {
   page.init()
-  page.addAllEvents(page.getEvent());
 })
 var username = "";
 var page = {
@@ -89,6 +88,7 @@ var page = {
            $('.mainContainer').addClass("active");
            $('.login').removeClass("active");
            $('.loginError').removeClass("show")
+           page.addAllEvents(page.getEvent());
          }
       }
     });
