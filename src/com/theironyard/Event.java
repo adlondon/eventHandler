@@ -6,13 +6,13 @@ import java.time.LocalDate;
  * Created by alexanderhughes on 3/3/16.
  */
 public class Event {
-    int id;
-    String category;
-    LocalDate date;
-    String location;
-    String userName;
-    String title;
-    boolean isGoing;
+    private int id;
+    private String category;
+    private LocalDate date;
+    private String location;
+    private String userName;
+    private String title;
+    private boolean isGoing;
 
     public boolean isGoing() {
         return isGoing;
