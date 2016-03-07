@@ -162,9 +162,18 @@ public class Main {
         Spark.post(
                 "/delete",
                 ((request, response) -> {
-
+                    try {
                         int index = Integer.valueOf(request.queryParams("id"));//grabs from a hidden type input the id to be deleted
                         deleteEvent(conn, index);
+                    }
+                    catch (NumberFormatException e) {
+                        logger.error("a non int was served as an id");
+                        Spark.halt(400, "a non int was served as an id" + e.getMessage());
+                    }
+                    catch (SQLException e) {
+                        logger.error("error deleting event");
+                        Spark.halt(500, "error deleting event" + e.getMessage());
+                    }
                     return "";
                 })
         );
