@@ -23,7 +23,17 @@ body>div {
 }
 
 * {
+  font-family: Ubuntu;
   box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  textarea:focus, input:focus{
+    outline: none;
+  }
+}
+
+body {
+    background-color: #F7FFFB;
 }
 
 .party{
@@ -32,8 +42,8 @@ body>div {
     background-repeat: no-repeat;
 }
 
-.redneck_yardsale{
-  background-image: url('how-to-have-a-yard-sale.jpg');
+.yardsale{
+  background-image: url('https://unsplash.com/photos/4fwRyKISwfk');
   background-size: 100%;
     background-repeat: no-repeat;
 }
@@ -44,14 +54,14 @@ body>div {
   background-repeat: no-repeat;
 }
 
-.RAVE{
-  background-image: url('https://images.unsplash.com/photo-1429514513361-8fa32282fd5f?crop=entropy&dpr=2&fit=crop&fm=jpg&h=600&ixjsv=2.1.0&ixlib=rb-0.3.5&q=50&w=1275');
-  background-size: 150%;
+.concert{
+  background-image: url('https://images.unsplash.com/46/unsplash_52c319226cefb_1.JPG?crop=entropy&dpr=2&fit=crop&fm=jpg&h=600&ixjsv=2.1.0&ixlib=rb-0.3.5&q=50&w=1275');
+  background-size: 100%;
     background-repeat: no-repeat;
 }
 
 .sports{
-  background-image: url('http://images.performgroup.com/di/library/omnisport/72/37/stephencurry410gettyus_argftwmm8jhr1gb2q5e5gt5fc.jpg?t=-1588522764');
+  background-image: url('https://images.unsplash.com/photo-1417716226287-2f8cd2e80274?crop=entropy&dpr=2&fit=crop&fm=jpg&h=600&ixjsv=2.1.0&ixlib=rb-0.3.5&q=50&w=1275');
   background-size: 100%;
     background-repeat: no-repeat;
 }
