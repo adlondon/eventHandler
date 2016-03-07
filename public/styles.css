@@ -19,10 +19,9 @@
       display: flex; }
     .login .loginForm p {
       display: none;
-      color: #FF0700; }
+      color: #FFB56B; }
       .login .loginForm p span {
         color: #CEFF6D;
-        font-size: 35px;
         font-weight: 800; }
     .login .loginForm .show {
       display: block; }
