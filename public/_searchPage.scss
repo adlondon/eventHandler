@@ -10,9 +10,9 @@
     color: #F7FFFB;
     text-shadow: 2px 2px 4px black;
     border-radius: 5px;
-    background-color: transparent;
+    background-color: gray;
     background-blend-mode: multiply;
-    transition: all 0.5s ease;
+    transition: background-color 0.5s ease;
     div:hover {
       background-color: gray;
     }

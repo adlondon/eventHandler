@@ -1,6 +1,7 @@
 $(document).ready(function () {
   page.init()
 })
+var id = ""
 var username = "";
 var page = {
   url: {
@@ -8,7 +9,9 @@ var page = {
     addEvent: "/add-event",
     getAllEvents: "/get-all-events",
     getHostEvents: "/get-host-events",
-    deleteUrl: "/delete"
+    deleteUrl: "/delete",
+    getAttendingEvent: "/get-attending",
+    addAttending: "/add-attending"
 
   },
 
@@ -48,7 +51,7 @@ var page = {
 
     $('.events').on('click', function (event) {
       event.preventDefault();
-      page.addAttendingEvents(page.getEvent())
+      page.addAttendingEventToPage(page.getAttendingEvent())
     })
 
     $('input[name="eventSubmit"]').on("click", function (event) {
@@ -70,14 +73,26 @@ var page = {
         $(this).closest('.mainContainer').siblings('.login').addClass('active');
     });
 
-    $('body').on('click', 'button', function(event){
+    $('body').on('click', '.button', function(event){
       event.preventDefault();
-      var id = $(this).data('id');
-      window.glob = id;
+      var id = $(this).parent().data('id');
+      // window.glob = id;
       page.delete(id);
 
-    })
+    });
 
+    $('body').on('click', '.addButton', function(event){
+      event.preventDefault();
+      var idx = $(this).parent().data('id');
+      window.glob = idx;
+      page.addAttendingEvents(idx);
+
+    });
+
+    // $('.eventsAttending').on('click', function (event) {
+    //   event.preventDefault();
+    //   page.addAttendingEvents(page.getAttendingEvent())
+    // })
 
   },
 
@@ -129,7 +144,7 @@ var page = {
   getEventInfo: function(){
     var title = $('input[name="title"]').val();
     var category = $('#catSelector').val();
-    window.glob = category;
+    // window.glob = category;
     var date = $('input[name="date"]').val();
     var location = $('input[name="location"]').val();
     return{
@@ -149,7 +164,7 @@ var page = {
     method: 'GET',
     success: function (events) {
         console.log("RECEIVED Events", events);
-        window.glob = events;
+        // window.glob = events;
         page.addAllEvents(JSON.parse(events));
     },
     error: function (err) {
@@ -172,7 +187,7 @@ $.ajax({
   method: 'GET',
   success: function (events) {
       console.log("RECEIVED Events", events);
-      window.glob = events;
+      // window.glob = events;
       page.addHostEvents(JSON.parse(events));
   },
   error: function (err) {
@@ -203,12 +218,42 @@ delete: function(id){
     })
 },
 
-// addAttendingEvents: function (arr) {
-//   $('.eventsAttending').html('');
-//   _.each(arr, function (el) {
-//     var attTmpl = _.template(templates.events);
-//     $('.eventsAttending').prepend(attTmpl(el));
-//   })
-// },
+getAttendingEvent: function() {
+$.ajax({
+  url: page.url.getAttendingEvent,
+  method: 'GET',
+  success: function (events) {
+      console.log("RECEIVED ATEENDING", events);
+      // window.glob = events;
+      page.addAttendingEventToPage(JSON.parse(events));
+  },
+  error: function (err) {
+  }
+});
+},
+
+addAttendingEventToPage: function(arr){
+  $('.eventsAttending').html('');
+  _.each(arr, function (el) {
+    var tmpl = _.template(templates.events);
+    $(".eventsAttending").prepend(tmpl(el));
+  });
+
+},
+
+addAttendingEvents: function (id) {
+  $.ajax({
+    url: page.url.addAttending,
+    method: 'POST',
+    data: {id: id},
+    success: function (events) {
+        console.log("RECEIVED ATEENDING", events);
+        // window.glob = events;
+        // page.addHostEvents(JSON.parse(events));
+    },
+    error: function (err) {
+    }
+  });
+},
 
 }

@@ -6,8 +6,7 @@ var templates = {};
   "<p> Hosted By <%= userName %></p>",
   "<p><%= location %></p>",
   "<p><%= date.dayOfWeek %>, <%= date.month %><%= date.dayOfMonth %></p>",
-  "<input name = 'completed' type='checkbox' class='attending'>",
-  "</input>",
+  "<button class='addButton'> Attend </button>",
   "</div>"].join("");
 
 var temples = {};
@@ -17,9 +16,7 @@ var temples = {};
   "<p> Hosted By <%= userName %></p>",
   "<p><%= location %></p>",
   "<p><%= date.dayOfWeek %>, <%= date.month %><%= date.dayOfMonth %></p>",
-  "<input name = 'completed' type='checkbox' class='attending'>",
-  "</input>",
-  "<button> Delete </button>",
+  "<button class='button'> Delete </button>",
   "</div>"].join("");
 
   // templates.attending = [
