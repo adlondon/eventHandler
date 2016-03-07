@@ -12,6 +12,15 @@ public class Event {
     String location;
     String userName;
     String title;
+    boolean isGoing;
+
+    public boolean isGoing() {
+        return isGoing;
+    }
+
+    public void setGoing(boolean going) {
+        isGoing = going;
+    }
 
     public Event(int id, String userName, String category, LocalDate date, String location, String title) {
         this.id = id;
