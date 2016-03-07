@@ -5,17 +5,20 @@ import org.h2.tools.Server;
 import spark.Session;
 import spark.Spark;
 
-import java.math.BigDecimal;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class Main {
 
-    public static void main(String[] args) throws SQLException {
+    public static void main(String[] args) throws SQLException, FileNotFoundException {
 	// write your code here
         Connection conn = DriverManager.getConnection("jdbc:h2:mem:eventHandler");
         createTables(conn);
+        populateDatabase("testData.csv", conn);
         Spark.externalStaticFileLocation("public");
         Spark.init();
         Server.createWebServer().start();
@@ -25,17 +28,16 @@ public class Main {
                 ((request, response) -> {
                     User user = getUserFromSession(request.session(), conn);
                     ArrayList<Event> events = selectAllEvents(conn);
-
-                        ArrayList<Event> myEvents = selectMyEvents(conn, user);
-                        if (myEvents != null) {
-                            for (Event event : events) {
-                                for (Event myEvent : myEvents) {
-                                    if (event.getId() == myEvent.getId()) {
-                                        event.setGoing(true);
-                                    }
+                    ArrayList<Event> myEvents = selectMyEvents(conn, user);
+                    if (myEvents != null) {
+                        for (Event event : events) {
+                            for (Event myEvent : myEvents) {
+                                if (event.getId() == myEvent.getId()) {
+                                    event.setGoing(true);
                                 }
                             }
                         }
+                    }
 
                     JsonSerializer serializer = new JsonSerializer();
                     return serializer.serialize(events);
@@ -297,11 +299,12 @@ public class Main {
         ResultSet results = stmt.executeQuery();
         while (results.next()) {
             int id = results.getInt("id");
+            String userName = results.getString("user_name");
             String category = results.getString("category");
             LocalDate date = LocalDate.parse(results.getString("date"));
             String location = results.getString("location");
             String title = results.getString("title");
-            Event event = new Event(id, user.userName, category, date, location, title);
+            Event event = new Event(id, userName, category, date, location, title);
             events.add(event);
         }
         return events;
@@ -310,6 +313,30 @@ public class Main {
         PreparedStatement stmt = conn.prepareStatement("DELETE FROM myEvents WHERE event_id = ? AND attendee = ?");
         stmt.setInt(1, id);
         stmt.setString(2, user.userName);
+        stmt.execute();
+    }
+
+    static void populateDatabase(String fileName, Connection conn) throws FileNotFoundException, SQLException {
+        insertUser(conn, "bob", "");
+        insertUser(conn, "bill", "");
+        insertUser(conn, "steve", "");
+
+        File f = new File(fileName);
+        Scanner fileScanner = new Scanner(f);
+        fileScanner.nextLine();
+        while (fileScanner.hasNext()) {
+            String[] columns = fileScanner.nextLine().split(",");
+            Event event = new Event(Integer.valueOf(columns[0]), columns[1], columns[2], LocalDate.parse(columns[3]), columns[4], columns[5]);
+            insertTestData(conn, event);
+        }
+    }
+    static void insertTestData(Connection conn, Event event) throws SQLException {
+        PreparedStatement stmt = conn.prepareStatement("INSERT INTO events VALUES(NULL, ?, ?, ?, ?, ?)");
+        stmt.setString(1, event.userName);
+        stmt.setString(2, event.category);
+        stmt.setString(3, event.date.toString());
+        stmt.setString(4, event.location);
+        stmt.setString(5, event.title);
         stmt.execute();
     }
 }
