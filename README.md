@@ -16,4 +16,4 @@ This project was created to fulfill an assignment for The Iron Yard Charleston's
 
 ----------------------------------
 
-*Week 5, Day 4*
+**Week 5, Day 4**
